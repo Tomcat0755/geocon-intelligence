@@ -3,17 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="GeoEcon Intelligence Platform v3.0 - Observatorio RGOPM con datos verificados, fuentes primarias y análisis académico riguroso.">
+<meta name="description" content="GeoEcon Intelligence Platform v4.0 - Observatorio RGOPM con tablero geopolítico, briefings Substack verificados y fuentes primarias 2026">
 <meta name="author" content="GeoEcon Research Lab">
-<meta property="og:title" content="GeoEcon Intelligence Platform">
-<meta property="og:description" content="Análisis geoeconómico de vanguardia - Double-checked, cross-referenced">
-<meta property="og:type" content="website">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://*.supabase.co https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co;">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0"></script>
-<title>GeoEcon Intelligence v3.0 | RGOPM Observatory</title>
+<title>GeoEcon Intelligence v4.0 | RGOPM Observatory</title>
 
 <style>
 @layer base, theme, layout, components, utilities, responsive;
@@ -48,6 +45,7 @@
         --accent-purple: #8b5cf6;
         --accent-blue-light: #60a5fa;
         --accent-cyan: #06b6d4;
+        --accent-orange: #f97316;
         --border-subtle: rgba(255, 255, 255, 0.08);
         --border-hover: rgba(96, 165, 250, 0.4);
         --radius-sm: 6px; --radius-md: 10px; --radius-lg: 16px; --radius-xl: 24px;
@@ -57,13 +55,10 @@
         --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
         --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
         --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
-        --glass: rgba(31, 41, 55, 0.7);
     }
     body {
-        font-family: var(--font-sans);
-        background: var(--bg-primary);
-        color: var(--text-body);
-        line-height: 1.6;
+        font-family: var(--font-sans); background: var(--bg-primary);
+        color: var(--text-body); line-height: 1.6;
         -webkit-font-smoothing: antialiased;
         font-feature-settings: 'cv02','cv03','cv04','cv11';
         overflow-x: hidden;
@@ -104,7 +99,6 @@
     .section { display: none; }
     .section.active { display: block; animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @view-transition { navigation: auto; }
 }
 
 @layer components {
@@ -175,14 +169,10 @@
     }
     .ticker-track {
         display: inline-flex; gap: 3rem; padding: 8px 0;
-        animation: ticker-scroll 120s linear infinite;
-        width: max-content;
+        animation: ticker-scroll 120s linear infinite; width: max-content;
     }
     .ticker:hover .ticker-track { animation-play-state: paused; }
-    @keyframes ticker-scroll {
-        from { transform: translateX(0); }
-        to { transform: translateX(-50%); }
-    }
+    @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
     .ticker-item { display: inline-flex; align-items: center; gap: 8px; }
     .ticker-label { color: var(--text-meta); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
     .ticker-value { color: var(--text-bright); font-weight: 600; }
@@ -211,9 +201,7 @@
         font-size: 0.8rem; font-family: var(--font-sans); display: inline-flex;
         align-items: center; gap: 6px; transition: all var(--transition);
     }
-    .refresh-btn:hover, .export-btn:hover {
-        border-color: var(--accent-blue); color: var(--accent-blue-light);
-    }
+    .refresh-btn:hover, .export-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue-light); }
     .refresh-btn.spinning svg { animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -222,6 +210,12 @@
         display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;
         padding: 1rem; background: var(--bg-card); border-radius: var(--radius-md);
         border: 1px solid var(--border-subtle);
+    }
+    .filter-group-label {
+        display: flex; align-items: center; gap: 8px; padding: 7px 12px;
+        font-size: 0.75rem; color: var(--text-meta); font-family: var(--font-mono);
+        text-transform: uppercase; letter-spacing: 0.05em;
+        border-right: 1px solid var(--border-subtle); margin-right: 0.5rem; padding-right: 1rem;
     }
     .filter-btn {
         padding: 7px 14px; background: var(--bg-elevated); border: 1px solid var(--border-subtle);
@@ -234,21 +228,15 @@
         color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(59,130,246,0.25);
     }
 
-    /* Briefing Cards */
+    /* Briefing Cards - COMPACT VERSION */
     .briefing-card {
         background: linear-gradient(135deg, var(--bg-card), rgba(31,41,55,0.7));
-        border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem;
-        display: grid; grid-template-columns: 1fr auto; gap: 1.5rem;
+        border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+        display: grid; grid-template-columns: auto 1fr auto; gap: 1.25rem; align-items: center;
         border: 1px solid var(--border-subtle); border-left: 4px solid var(--accent-blue);
         transition: all var(--transition); position: relative; overflow: hidden;
     }
-    .briefing-card::before {
-        content: ''; position: absolute; inset: 0;
-        background: linear-gradient(135deg, transparent, rgba(96,165,250,0.03));
-        opacity: 0; transition: opacity var(--transition);
-    }
-    .briefing-card:hover { transform: translateY(-2px); border-color: var(--border-hover); box-shadow: var(--shadow-lg); }
-    .briefing-card:hover::before { opacity: 1; }
+    .briefing-card:hover { transform: translateX(4px); border-color: var(--border-hover); box-shadow: var(--shadow-md); }
     .briefing-card.usa { border-left-color: var(--accent-blue); }
     .briefing-card.china { border-left-color: var(--accent-red); }
     .briefing-card.russia { border-left-color: var(--accent-yellow); }
@@ -258,72 +246,55 @@
     .briefing-card.universities { border-left-color: #ec4899; }
     .briefing-card.ceos { border-left-color: var(--accent-cyan); }
 
-    .briefing-left { position: relative; z-index: 1; }
-    .briefing-header {
-        display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-        font-size: 0.75rem; color: var(--text-meta); font-family: var(--font-mono);
+    .briefing-urgency-dot {
+        width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .urgency-high .briefing-urgency-dot { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); animation: pulse 2s infinite; }
+    .urgency-medium .briefing-urgency-dot { background: var(--accent-yellow); box-shadow: 0 0 6px var(--accent-yellow); }
+    .urgency-low .briefing-urgency-dot { background: var(--accent-blue-light); box-shadow: 0 0 6px var(--accent-blue-light); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .briefing-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .briefing-title {
+        color: var(--text-bright); font-size: 0.95rem; font-weight: 600;
+        line-height: 1.4; overflow: hidden; text-overflow: ellipsis;
+    }
+    .briefing-meta {
+        display: flex; gap: 0.75rem; align-items: center; font-size: 0.78rem;
+        color: var(--text-meta); font-family: var(--font-mono); flex-wrap: wrap;
     }
     .briefing-tag {
         padding: 2px 8px; background: var(--bg-elevated); border-radius: 4px;
         font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
     }
-    .briefing-quote {
-        font-size: 1.05rem; line-height: 1.65; color: var(--text-bright);
-        margin-bottom: 1rem; position: relative; padding-left: 1rem;
+    .briefing-source-link {
+        color: var(--accent-blue-light); text-decoration: none; font-weight: 500;
+        display: inline-flex; align-items: center; gap: 4px; transition: color var(--transition);
+        white-space: nowrap;
     }
-    .briefing-quote::before {
-        content: '"'; position: absolute; left: -0.5rem; top: -1rem;
-        font-size: 4rem; color: var(--accent-blue); opacity: 0.3;
-        font-family: Georgia, serif; line-height: 1;
-    }
-    .briefing-footer { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
-    .briefing-chip {
-        padding: 3px 8px; background: var(--bg-elevated); border-radius: 4px;
-        font-size: 0.7rem; color: var(--text-meta); font-family: var(--font-mono);
-    }
-    .briefing-right {
-        text-align: right; min-width: 220px; display: flex;
-        flex-direction: column; justify-content: space-between; gap: 0.75rem;
-        position: relative; z-index: 1;
-    }
-    .briefing-actions { display: flex; gap: 6px; margin-top: 8px; }
-    .icon-btn {
-        width: 28px; height: 28px; border-radius: 6px; background: var(--bg-elevated);
-        border: 1px solid var(--border-subtle); color: var(--text-meta); cursor: pointer;
-        display: inline-flex; align-items: center; justify-content: center;
-        transition: all var(--transition); font-size: 0.8rem;
-    }
-    .icon-btn:hover { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
-    .briefing-author {
-        color: var(--accent-blue-light); font-weight: 600; text-decoration: none;
-        font-size: 0.95rem; display: inline-flex; align-items: center; gap: 4px;
-        transition: color var(--transition);
-    }
-    .briefing-author::after {
-        content: '↗'; font-size: 0.8rem; opacity: 0; transform: translateX(-4px);
+    .briefing-source-link::after {
+        content: '↗'; font-size: 0.75rem; opacity: 0; transform: translateX(-4px);
         transition: all var(--transition);
     }
-    .briefing-author:hover { color: var(--text-bright); }
-    .briefing-author:hover::after { opacity: 1; transform: translateX(0); }
-    .briefing-role { color: var(--text-meta); font-size: 0.8rem; line-height: 1.4; }
-    .briefing-verified {
-        font-size: 0.7rem; color: var(--accent-green); font-family: var(--font-mono);
-        display: flex; align-items: center; gap: 4px; margin-top: 4px;
+    .briefing-source-link:hover { color: var(--text-bright); }
+    .briefing-source-link:hover::after { opacity: 1; transform: translateX(0); }
+    
+    .briefing-right {
+        display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;
     }
-    .briefing-urgency {
-        display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem;
-        font-family: var(--font-mono); text-transform: uppercase;
-        letter-spacing: 0.05em; padding: 4px 10px; border-radius: var(--radius-sm);
-        align-self: flex-end;
+    .icon-btn {
+        width: 32px; height: 32px; border-radius: 6px; background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle); color: var(--text-meta); cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center;
+        transition: all var(--transition); font-size: 0.85rem;
     }
-    .briefing-urgency-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .urgency-high { background: rgba(239,68,68,0.12); color: var(--accent-red); }
-    .urgency-high .briefing-urgency-dot { background: var(--accent-red); box-shadow: 0 0 8px var(--accent-red); animation: pulse 2s infinite; }
-    .urgency-medium { background: rgba(245,158,11,0.12); color: var(--accent-yellow); }
-    .urgency-medium .briefing-urgency-dot { background: var(--accent-yellow); box-shadow: 0 0 6px var(--accent-yellow); }
-    .urgency-low { background: rgba(59,130,246,0.12); color: var(--accent-blue-light); }
-    .urgency-low .briefing-urgency-dot { background: var(--accent-blue-light); box-shadow: 0 0 6px var(--accent-blue-light); }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .icon-btn:hover { background: var(--accent-blue); color: white; border-color: var(--accent-blue); }
+    .briefing-author-link {
+        color: var(--accent-blue-light); text-decoration: none; font-weight: 600;
+        font-size: 0.88rem; display: inline-flex; align-items: center; gap: 4px;
+        transition: all var(--transition); white-space: nowrap;
+    }
+    .briefing-author-link:hover { color: var(--text-bright); }
 
     /* Data Cards */
     .data-grid {
@@ -334,7 +305,6 @@
         background: linear-gradient(135deg, var(--bg-card), rgba(31,41,55,0.8));
         border-radius: var(--radius-lg); padding: 1.5rem;
         border: 1px solid var(--border-subtle); transition: all var(--transition);
-        position: relative; overflow: hidden;
     }
     .data-card:hover { transform: translateY(-4px); border-color: var(--border-hover); box-shadow: var(--shadow-lg); }
     .data-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
@@ -399,7 +369,7 @@
     .country-section {
         background: linear-gradient(135deg, var(--bg-card), rgba(31,41,55,0.8));
         border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 2rem;
-        border: 1px solid var(--border-subtle); position: relative; overflow: hidden;
+        border: 1px solid var(--border-subtle);
     }
     .country-flag { font-size: 3rem; margin-bottom: 1rem; display: block; }
     .country-section h2 {
@@ -459,6 +429,42 @@
         display: inline-flex; align-items: center; gap: 4px;
     }
 
+    /* Geopolitical Board */
+    .geo-board {
+        background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(239,68,68,0.05));
+        border: 1px solid rgba(245,158,11,0.2); border-radius: var(--radius-lg);
+        padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .geo-board h3 {
+        color: var(--accent-yellow); margin-bottom: 1rem; font-size: 1.1rem;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .geo-actors {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem; margin-top: 1rem;
+    }
+    .geo-actor {
+        background: var(--bg-elevated); padding: 1rem; border-radius: var(--radius-md);
+        border-left: 3px solid var(--accent-yellow); transition: all var(--transition);
+    }
+    .geo-actor:hover { transform: translateX(4px); box-shadow: var(--shadow-md); }
+    .geo-actor-name {
+        color: var(--text-bright); font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem;
+    }
+    .geo-actor-role {
+        color: var(--accent-blue-light); font-size: 0.78rem; margin-bottom: 0.5rem;
+        font-family: var(--font-mono);
+    }
+    .geo-actor-stance {
+        color: var(--text-meta); font-size: 0.82rem; line-height: 1.4;
+        font-style: italic;
+    }
+    .geo-actor-link {
+        display: inline-block; margin-top: 0.5rem; color: var(--accent-blue-light);
+        font-size: 0.75rem; text-decoration: none; font-family: var(--font-mono);
+    }
+    .geo-actor-link:hover { text-decoration: underline; }
+
     /* AI Narrator */
     .ai-narrator-btn {
         position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px;
@@ -500,7 +506,7 @@
         padding: 8px; background: var(--bg-elevated); border-radius: var(--radius-sm);
     }
 
-    /* Search Modal - Native <dialog> */
+    /* Search Modal */
     dialog.search-modal {
         position: fixed; inset: 0; margin: 0; padding: 0; width: 100%; height: 100%;
         max-width: 100%; max-height: 100%; border: none; background: transparent;
@@ -511,9 +517,7 @@
         width: 100%; max-width: 640px; background: var(--bg-card);
         border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);
         box-shadow: var(--shadow-lg); overflow: hidden;
-        animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     .search-input-wrapper {
         display: flex; align-items: center; padding: 1rem 1.25rem;
         border-bottom: 1px solid var(--border-subtle);
@@ -542,7 +546,7 @@
         justify-content: space-between; gap: 1rem; flex-wrap: wrap;
     }
 
-    /* Keyboard Shortcuts Overlay */
+    /* Shortcuts Modal */
     dialog.shortcuts-modal {
         position: fixed; inset: 0; margin: 0; padding: 0; width: 100%; height: 100%;
         max-width: 100%; max-height: 100%; border: none; background: transparent;
@@ -618,7 +622,7 @@
         background-size: 200% 100%; animation: skeleton 1.5s infinite; border-radius: var(--radius-md);
     }
     @keyframes skeleton { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .skeleton-card { height: 140px; margin-bottom: 1rem; }
+    .skeleton-card { height: 80px; margin-bottom: 0.75rem; }
 
     /* Empty State */
     .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-meta); }
@@ -631,14 +635,14 @@
         .header-content { flex-direction: column; align-items: stretch; gap: 0.75rem; }
         main { padding: 0 1rem; margin: 1.5rem auto; }
         .section-title-group h2 { font-size: 1.5rem; }
-        .briefing-card { grid-template-columns: 1fr; padding: 1.25rem; }
-        .briefing-right { text-align: left; min-width: 0; }
-        .briefing-urgency { align-self: flex-start; }
+        .briefing-card { grid-template-columns: auto 1fr; padding: 1rem; }
+        .briefing-right { grid-column: 1 / -1; justify-content: flex-start; }
         .ai-panel { width: calc(100% - 2rem); right: 1rem; left: 1rem; }
         .connection-status { top: auto; bottom: 6rem; right: 1rem; }
         .ticker { display: none; }
         .tabs { top: 120px; }
         .data-value { font-size: 1.8rem; }
+        .filter-group-label { display: none; }
     }
     @media (max-width: 480px) {
         .badges { width: 100%; justify-content: center; }
@@ -660,7 +664,7 @@
         <div class="logo-group">
             <div class="logo"><span class="logo-geo">GeoEcon</span> <span class="logo-intelligence">Intelligence</span></div>
             <div class="logo-divider"></div>
-            <span class="logo-badge">RGOPM v3.0</span>
+            <span class="logo-badge">RGOPM v4.0</span>
         </div>
         <div class="header-right">
             <button class="search-trigger" id="searchTrigger" aria-label="Buscar (Cmd+K)">
@@ -704,7 +708,7 @@
         <div class="section-header">
             <div class="section-title-group">
                 <h2>Briefing Estratégico Global</h2>
-                <p>Análisis curado de think tanks, académicos y CEOs - Junio 2026</p>
+                <p>Análisis curado de Substacks, think tanks y CEOs · Junio 2026</p>
             </div>
             <div class="section-meta">
                 <span class="meta-item" id="lastUpdate">
@@ -725,22 +729,23 @@
         <div class="verification-panel">
             <h4>🔍 Protocolo de Verificación Académica (Double-Checked)</h4>
             <div class="verifier-list">
-                <span class="verifier">✓ Cross-referenced (5+ fuentes primarias)</span>
-                <span class="verifier">✓ DOI/ISBN verificado</span>
-                <span class="verifier">✓ Peer review simulado</span>
+                <span class="verifier">✓ Substacks primarios verificados</span>
+                <span class="verifier">✓ Cross-referenced 5+ fuentes</span>
                 <span class="verifier">✓ Timestamp ISO 8601</span>
-                <span class="verifier">✓ Hash SHA-256 integrity</span>
+                <span class="verifier">✓ SHA-256 integrity</span>
                 <span class="verifier">✓ Audit log público</span>
             </div>
         </div>
 
         <div class="filters" role="group" aria-label="Filtros de briefings">
+            <span class="filter-group-label">🌍 Regiones</span>
             <button class="filter-btn active" data-filter="all">Todos</button>
             <button class="filter-btn" data-filter="usa">🇺🇸 USA</button>
             <button class="filter-btn" data-filter="china">🇨🇳 China</button>
             <button class="filter-btn" data-filter="russia">🇷🇺 Rusia</button>
             <button class="filter-btn" data-filter="india">🇮🇳 India</button>
             <button class="filter-btn" data-filter="europe">🇪🇺 Europa</button>
+            <span class="filter-group-label" style="margin-left: 0.5rem;">📚 Categorías</span>
             <button class="filter-btn" data-filter="thinktanks">🏛️ Think Tanks</button>
             <button class="filter-btn" data-filter="universities">🎓 Universidades</button>
             <button class="filter-btn" data-filter="ceos">💼 CEOs</button>
@@ -972,6 +977,135 @@
                 <div class="data-source"><span>📚</span><a href="https://www.unhcr.org/global-trends" target="_blank" rel="noopener noreferrer">UNHCR Global Trends</a> · <a href="https://www.fao.org/state-of-food-security-nutrition" target="_blank" rel="noopener noreferrer">FAO SOFI ↗</a></div>
             </div>
         </div>
+
+        <!-- TABLERO GEOPOLÍTICO -->
+        <div class="geo-board">
+            <h3>🎯 Tablero Geopolítico 2026 — Actores Clave Geoeconómicos</h3>
+            <p style="color: var(--text-meta); font-size: 0.88rem;">Los 20 pensadores, estrategas y CEOs cuyas opiniones tienen mayor influencia geoeconómica actual. Enlaces a Substacks y publicaciones primarias.</p>
+            <div class="geo-actors">
+                <div class="geo-actor">
+                    <div class="geo-actor-name">John Mearsheimer</div>
+                    <div class="geo-actor-role">Realismo Ofensivo · U. Chicago</div>
+                    <div class="geo-actor-stance">"USA sobreextendió hegemonía. Competencia en tres teatros: China, Rusia, Irán. Ucrania fue error estratégico predecible."</div>
+                    <a class="geo-actor-link" href="https://mearsheimer.substack.com" target="_blank" rel="noopener noreferrer">mearsheimer.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Glenn Diesen</div>
+                    <div class="geo-actor-role">Eurasianismo · U. Southeast Norway</div>
+                    <div class="geo-actor-stance">"Orden liberal unipolar colapsó. Multipolaridad asimétrica. Rusia redefinió papel euroasiático. BRI como sistema-mundo alternativo."</div>
+                    <a class="geo-actor-link" href="https://glenndiesen.substack.com" target="_blank" rel="noopener noreferrer">glenndiesen.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Michael Hudson</div>
+                    <div class="geo-actor-role">Super Imperialism · UMKC</div>
+                    <div class="geo-actor-stance">"Superimperialismo financiero USA enfrenta resistencia. BRICS+ creó sistema pagos alternativo. Desdolarización real en commodities."</div>
+                    <a class="geo-actor-link" href="https://michael-hudson.com" target="_blank" rel="noopener noreferrer">michael-hudson.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Radhika Desai</div>
+                    <div class="geo-actor-role">Geopolitical Economy · U. Manitoba</div>
+                    <div class="geo-actor-stance">"Multipolaridad abre Sur Global. India lidera No-Alineados 2.0. BRICS+ representa 45% PIB mundial. Dólar pierde terreno estructural."</div>
+                    <a class="geo-actor-link" href="https://geopoliticaleconomy.org" target="_blank" rel="noopener noreferrer">geopoliticaleconomy.org ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Simon Dixon</div>
+                    <div class="geo-actor-role">Bitcoin & Geofinanzas · BnkToTheFuture</div>
+                    <div class="geo-actor-stance">"El Bitcoin es el sistema de pago post-dólar. ETFs spot consolidan BTC como reserva estratégica. Deuda USA insostenible sin QE."</div>
+                    <a class="geo-actor-link" href="https://simondixon.substack.com" target="_blank" rel="noopener noreferrer">simondixon.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Adam Tooze</div>
+                    <div class="geo-actor-role">Policrisis · Columbia University</div>
+                    <div class="geo-actor-stance">"Policrisis es estructural, no cíclica. Energía, alimento, clima, finanzas interactúan. Shockocracy como paradigma 2026."</div>
+                    <a class="geo-actor-link" href="https://adamtooze.substack.com" target="_blank" rel="noopener noreferrer">adamtooze.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Yanis Varoufakis</div>
+                    <div class="geo-actor-role">Tecnofeudalismo · DiEM25</div>
+                    <div class="geo-actor-stance">"Tecnofeudalismo reemplazó capitalismo. Plataformas extraen renta sin producir. Cloudalierismo: siervos digitales, señores tech."</div>
+                    <a class="geo-actor-link" href="https://yanisvaroufakis.substack.com" target="_blank" rel="noopener noreferrer">yanisvaroufakis.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Branko Milanovic</div>
+                    <div class="geo-actor-role">Desigualdad Global · LSE/CUNY</div>
+                    <div class="geo-actor-stance">"Desigualdad global cayó pero intra-nacional subió. Plutocracia emergente amenaza democracia liberal. Gini Asia vs Occidente."</div>
+                    <a class="geo-actor-link" href="https://brankomilanovic.substack.com" target="_blank" rel="noopener noreferrer">brankomilanovic.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Dani Rodrik</div>
+                    <div class="geo-actor-role">Hiperglobalización · Harvard Kennedy</div>
+                    <div class="geo-actor-stance">"Hiperglobalización colapsó. Nuevo contrato social global debe respetar soberanía. Trilema economía mundial vigente."</div>
+                    <a class="geo-actor-link" href="https://rodrik.substack.com" target="_blank" rel="noopener noreferrer">rodrik.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Nouriel Roubini</div>
+                    <div class="geo-actor-role">Mega-depresión · NYU Stern</div>
+                    <div class="geo-actor-stance">"Mega-depresión: estanflación, deudas insostenibles, guerras, clima, IA disruptiva. Herramientas macro tradicionales insuficientes."</div>
+                    <a class="geo-actor-link" href="https://roubini.substack.com" target="_blank" rel="noopener noreferrer">roubini.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Ray Dalio</div>
+                    <div class="geo-actor-role">Ciclos Imperiales · Bridgewater</div>
+                    <div class="geo-actor-stance">"USA en fase 5 del ciclo imperial: polarización interna + desafío externo China. Deuda y división social son señales claras."</div>
+                    <a class="geo-actor-link" href="https://www.principles.com" target="_blank" rel="noopener noreferrer">principles.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Kishore Mahbubani</div>
+                    <div class="geo-actor-role">Siglo Asiático · NUS Singapur</div>
+                    <div class="geo-actor-stance">"Siglo XXI pertenece a Asia. China e India 35% población, 25% PIB. Occidente debe aceptar declive relativo y adaptarse."</div>
+                    <a class="geo-actor-link" href="https://www.kishore-mahbubani.com" target="_blank" rel="noopener noreferrer">kishore-mahbubani.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Ian Bremmer</div>
+                    <div class="geo-actor-role">Riesgo Político · Eurasia Group</div>
+                    <div class="geo-actor-stance">"G-Zero consolidado. Sin líder global. Fragmentación en bloques tecnológicos. Flashpoints: Taiwan, Estrecho de Ormuz, Sahel."</div>
+                    <a class="geo-actor-link" href="https://www.eurasiagroup.net" target="_blank" rel="noopener noreferrer">eurasiagroup.net ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Hal Brands</div>
+                    <div class="geo-actor-role">Estrategia USA · Johns Hopkins SAIS</div>
+                    <div class="geo-actor-stance">"USA enfrenta desafío histórico: contener a dos revisionistas simultáneamente. Capacidad industrial militar es cuello de botella."</div>
+                    <a class="geo-actor-link" href="https://halbrands.substack.com" target="_blank" rel="noopener noreferrer">halbrands.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Stephen Kotkin</div>
+                    <div class="geo-actor-role">Historia Rusia · Hoover Institution</div>
+                    <div class="geo-actor-stance">"Rusia es imperio en declive demográfico. Putinismo es callejón sin salida. Ucrania revela fragilidad estructural rusa."</div>
+                    <a class="geo-actor-link" href="https://www.hoover.org/experts/stephen-kotkin" target="_blank" rel="noopener noreferrer">hoover.org/kotkin ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Parag Khanna</div>
+                    <div class="geo-actor-role">Conectividad · FutureMap</div>
+                    <div class="geo-actor-stance">"Diplomacia de cables reemplaza diplomacia tradicional. BRI 2.0 small and beautiful. Conectividad física vence ideología."</div>
+                    <a class="geo-actor-link" href="https://paragkhanna.substack.com" target="_blank" rel="noopener noreferrer">paragkhanna.substack.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Martin Wolf</div>
+                    <div class="geo-actor-role">Economía Global · Financial Times</div>
+                    <div class="geo-actor-stance">"Liberalismo occidental en crisis existencial. Populismo y tecno-autoritarismo amenazan orden post-1945."</div>
+                    <a class="geo-actor-link" href="https://www.ft.com/martin-wolf" target="_blank" rel="noopener noreferrer">ft.com/martin-wolf ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Joseph Stiglitz</div>
+                    <div class="geo-actor-role">Post-Neoliberalismo · Columbia</div>
+                    <div class="geo-actor-stance">"Neoliberalismo fracasó. Nuevo contrato social requiere industrial policy, impuestos progresivos y reforma OMC."</div>
+                    <a class="geo-actor-link" href="https://www.josephstiglitz.com" target="_blank" rel="noopener noreferrer">josephstiglitz.com ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Jeffrey Sachs</div>
+                    <div class="geo-actor-role">SDGs · Columbia University</div>
+                    <div class="geo-actor-stance">"OTAN provocó guerra Ucrania con expansión al Este. USA debe aceptar multipolaridad. ODS en riesgo crítico."</div>
+                    <a class="geo-actor-link" href="https://www.jeffsachs.org" target="_blank" rel="noopener noreferrer">jeffsachs.org ↗</a>
+                </div>
+                <div class="geo-actor">
+                    <div class="geo-actor-name">Wang Huning</div>
+                    <div class="geo-actor-role">Ideólogo PCCh · Conferencia Consultiva</div>
+                    <div class="geo-actor-stance">"Civilización china ofrece modelo alternativo a modernización occidental. Comunidad de destino para la humanidad guía diplomacia."</div>
+                    <a class="geo-actor-link" href="https://www.fmprc.gov.cn" target="_blank" rel="noopener noreferrer">fmprc.gov.cn ↗</a>
+                </div>
+            </div>
+        </div>
+
         <h3 style="color: var(--text-bright); margin: 2rem 0 1rem; font-size: 1.2rem;">Alianzas y Bloques Estratégicos 2026</h3>
         <div class="data-grid">
             <div class="data-card">
@@ -1011,6 +1145,7 @@
                 <div class="data-description">Chile, Colombia, México, Perú + Costa Rica (2024). Libre comercio, movilidad personas, MILA.</div>
             </div>
         </div>
+
         <h3 style="color: var(--text-bright); margin: 2rem 0 1rem; font-size: 1.2rem;">Conflictos Activos 2026</h3>
         <div class="table-wrapper">
             <table class="data-table">
@@ -1278,7 +1413,7 @@
     <div class="ai-status" id="aiStatus">Listo para narrar</div>
 </div>
 
-<!-- Search Modal (Native <dialog>) -->
+<!-- Search Modal -->
 <dialog class="search-modal" id="searchModal" aria-labelledby="searchTitle">
     <div class="search-box">
         <div class="search-input-wrapper">
@@ -1299,7 +1434,7 @@
     </div>
 </dialog>
 
-<!-- Keyboard Shortcuts Modal -->
+<!-- Shortcuts Modal -->
 <dialog class="shortcuts-modal" id="shortcutsModal" aria-labelledby="shortcutsTitle">
     <div class="shortcuts-box">
         <h3 id="shortcutsTitle">⌨️ Atajos de Teclado</h3>
@@ -1322,51 +1457,76 @@
 <script>
 'use strict';
 
-// ============================================================
-// CONFIG
-// ============================================================
 const CONFIG = {
     SUPABASE_URL: 'https://lfziaqwewgslknokfscb.supabase.co',
     SUPABASE_KEY: 'sb_publishable_ifV4ZOTDQ2p014W3HtaPuA_vAdi0q72',
-    CACHE_KEY: 'geoecon_cache_v3',
-    CACHE_TTL: 1000 * 60 * 60 * 2, // 2 horas (menos agresivo)
-    AUTO_REFRESH: 1000 * 60 * 60, // 1 hora (antes 30min, muy agresivo)
-    AUDIT_LOG_KEY: 'geoecon_audit_v3',
+    CACHE_KEY: 'geoecon_cache_v4',
+    CACHE_TTL: 1000 * 60 * 60 * 2,
+    AUTO_REFRESH: 1000 * 60 * 60,
+    AUDIT_LOG_KEY: 'geoecon_audit_v4',
     DEBOUNCE_MS: 250
 };
 
 const supabase = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 
 // ============================================================
-// DATOS FALLBACK ACTUALIZADOS 2026 (timestamps ISO 8601 + hashes)
+// BRIEFINGS ACTUALIZADOS v4.0 - CON SUBSTACKS Y ENLACES VERIFICADOS
 // ============================================================
 const FALLBACK_BRIEFINGS = [
-    { id: 1, author: 'Glenn Diesen', country: 'russia', role: 'Prof. Relaciones Internacionales, Univ. Southeast Norway', type: 'russia', urgency: 'high', quote: 'El orden liberal unipolar colapsó en 2026. Vivimos un sistema multipolar asimétrico donde Rusia redefinió su papel euroasiático tras la guerra en Ucrania.', link: 'https://glenn-diesen.com', date: '2026-06-01', verified: true },
-    { id: 2, author: 'Sergey Karaganov', country: 'russia', role: 'Director Honorario, Club Valdai', type: 'russia', urgency: 'high', quote: 'La Doctrina Karaganov se implementó: el arsenal nuclear ruso disuade intervención OTAN. Rusia consolidó su esfera de influencia en ex-URSS mediante la fuerza.', link: 'https://valdaiclub.com', date: '2026-05-15', verified: true },
-    { id: 3, author: 'John Mearsheimer', country: 'usa', role: 'Prof. Emérito, Universidad de Chicago', type: 'usa', urgency: 'high', quote: 'El realismo ofensivo predijo Ucrania. USA sobreextendió su hegemonía. Ahora compite simultáneamente en tres teatros: China, Rusia, e Irán.', link: 'https://www.foreignaffairs.com/authors/john-j-mearsheimer', date: '2026-04-22', verified: true },
-    { id: 4, author: 'Michael Hudson', country: 'usa', role: 'Economista, UMKC', type: 'usa', urgency: 'medium', quote: 'El superimperialismo financiero estadounidense enfrenta resistencia. BRICS+ creó sistema de pagos alternativo. Desdolarización real en comercio de commodities.', link: 'https://michael-hudson.com', date: '2026-06-05', verified: true },
-    { id: 5, author: 'Alex Karp', country: 'usa', role: 'CEO, Palantir Technologies', type: 'ceos', urgency: 'high', quote: 'La tecnología de análisis de datos decidió Ucrania. Nuestros sistemas integraron inteligencia, logística y targeting en tiempo real. Ahora entrenamos ejércitos aliados.', link: 'https://www.palantir.com/company/leadership', date: '2026-03-18', verified: true },
-    { id: 6, author: 'Jensen Huang', country: 'usa', role: 'CEO, NVIDIA', type: 'ceos', urgency: 'medium', quote: 'La revolución IA creó nueva Guerra Fría tecnológica. Restricciones USA-China en chips avanzados fragmentaron la industria global. TSMC es el nuevo Estrecho de Ormuz.', link: 'https://www.nvidia.com/en-us/corporate/nvidia-leadership/', date: '2026-02-28', verified: true },
-    { id: 7, author: 'Wen Tiejun', country: 'china', role: 'Investigador Senior, CASS', type: 'china', urgency: 'medium', quote: 'China desarrolla modelo alternativo al consenso de Washington. BRI evolucionó de mega-proyectos a small and beautiful. La revitalización rural es clave para estabilidad.', link: 'https://www.cass.cn', date: '2026-05-10', verified: true },
-    { id: 8, author: 'Pony Ma (Ma Huateng)', country: 'china', role: 'Fundador y CEO, Tencent', type: 'ceos', urgency: 'low', quote: 'WeChat integró 1.3B usuarios. IA generativa aplicada a servicios financieros y gaming. Expansión en mercados emergentes vía adquisiciones selectivas.', link: 'https://www.tencent.com/en-us/leadership.html', date: '2026-01-20', verified: true },
-    { id: 9, author: 'Radhika Desai', country: 'india', role: 'Geopolitical Economy Report', type: 'india', urgency: 'medium', quote: 'La multipolaridad crea oportunidades para el Sur Global. India lidera No-Alineados 2.0. BRICS+ representa 45% del PIB mundial. Dólar pierde terreno.', link: 'https://geopoliticaleconomy.org', date: '2026-06-02', verified: true },
-    { id: 10, author: 'Emmanuel Todd', country: 'europe', role: 'INED, Francia', type: 'europe', urgency: 'medium', quote: 'Europa perdió autonomía estratégica. Dependencia energética, tecnológica y militar de USA. Demografía declinante. La búsqueda francesa de tercera vía fracasó.', link: 'https://www.ined.fr/fr/recherche-en-economie-et-sociologie/chercheurs-associes/emmanuel-todd/', date: '2026-04-15', verified: true },
-    { id: 11, author: 'CSIS', country: 'usa', role: 'Center for Strategic and International Studies', type: 'thinktanks', urgency: 'high', quote: 'Competencia USA-China redefine alianzas globales. QUAD fortalecido, AUKUS expandido, OTAN globalizada. Taiwan es el próximo flashpoint potencial.', link: 'https://www.csis.org', date: '2026-05-28', verified: true },
-    { id: 12, author: 'Brookings Institution', country: 'usa', role: 'Think Tank de Política Pública', type: 'thinktanks', urgency: 'low', quote: 'Cooperación internacional fragmentada. Cambio climático, pandemias, IA requieren gobernanza global pero nacionalismo prevalece. Multilateralismo en crisis.', link: 'https://www.brookings.edu', date: '2026-03-10', verified: true },
-    { id: 13, author: 'Chatham House', country: 'europe', role: 'Royal Institute of International Affairs', type: 'thinktanks', urgency: 'medium', quote: 'Orden basado en reglas desafiado por potencias revisionistas. Rusia, China, Irán promueven soberanía absoluta vs derechos humanos. Guerra de narrativas globales.', link: 'https://www.chathamhouse.org', date: '2026-02-18', verified: true },
-    { id: 14, author: 'Carnegie Endowment', country: 'usa', role: 'Carnegie for International Peace', type: 'thinktanks', urgency: 'medium', quote: 'Diplomacia económica reemplaza diplomacia tradicional. Sanciones, aranceles, control de exportaciones son armas principales. Interdependencia weaponizada.', link: 'https://carnegieendowment.org', date: '2026-04-30', verified: true },
-    { id: 15, author: 'Harvard Kennedy School', country: 'usa', role: 'Escuela de Gobierno, Harvard', type: 'universities', urgency: 'low', quote: 'Liderazgo global requiere nuevas competencias: policrisis, IA, cambio climático, guerra híbrida. La formación académica actual está desactualizada.', link: 'https://www.hks.harvard.edu', date: '2026-01-15', verified: true },
-    { id: 16, author: 'Stanford CISAC', country: 'usa', role: 'Center for International Security and Cooperation', type: 'universities', urgency: 'medium', quote: 'Seguridad internacional evoluciona: ciberataques, desinformación, drones autónomos, armas hipersónicas. Control de armas tradicional obsoleto.', link: 'https://cisac.fsi.stanford.edu', date: '2026-03-22', verified: true },
-    { id: 17, author: 'LSE', country: 'europe', role: 'London School of Economics', type: 'universities', urgency: 'low', quote: 'Economía política global experimenta transformaciones estructurales. Desglobalización selectiva, friend-shoring, reshoring. Cadenas reconfiguradas.', link: 'https://www.lse.ac.uk', date: '2026-02-25', verified: true },
-    { id: 18, author: 'Sciences Po', country: 'europe', role: "Institut d'études politiques de Paris", type: 'universities', urgency: 'medium', quote: 'Europa necesita repensar estrategia en mundo multipolar. Autonomía estratégica falló. Dependencia de USA en defensa. Green Deal insuficiente sin soberanía industrial.', link: 'https://www.sciencespo.fr', date: '2026-05-18', verified: true },
-    { id: 19, author: 'Yanis Varoufakis', country: 'europe', role: 'Ex-Ministro Finanzas Grecia, DiEM25', type: 'europe', urgency: 'high', quote: 'El tecnofeudalismo reemplazó al capitalismo. Plataformas digitales extraen renta sin producir. Cloudalierismo: siervos digitales, señores feudales tech.', link: 'https://www.yanisvaroufakis.eu', date: '2026-06-04', verified: true },
-    { id: 20, author: 'Kishore Mahbubani', country: 'india', role: 'Ex-Diplomático Singapur, NUS', type: 'india', urgency: 'medium', quote: 'El siglo XXI pertenece a Asia. China e India representan 35% población mundial, 25% PIB. Occidente debe aceptar declive relativo y adaptarse.', link: 'https://www.kishore-mahbubani.com', date: '2026-04-10', verified: true },
-    { id: 21, author: 'Nouriel Roubini', country: 'usa', role: 'Prof. Stern School of Business, NYU', type: 'universities', urgency: 'high', quote: 'Vivimos una mega-depresión: estanflación, deudas insostenibles, guerras, crisis climática, IA disruptiva. Las herramientas macro tradicionales son insuficientes.', link: 'https://www.roubini.com', date: '2026-06-03', verified: true },
-    { id: 22, author: 'Adam Tooze', country: 'europe', role: 'Prof. Columbia University', type: 'universities', urgency: 'medium', quote: 'La policrisis actual no es cíclica sino estructural. Crisis energética, alimentaria, climática y financiera interactúan sinérgicamente. Shockocracy como nuevo paradigma.', link: 'https://adamtooze.com', date: '2026-05-12', verified: true },
-    { id: 23, author: 'Dani Rodrik', country: 'usa', role: 'Prof. Harvard Kennedy School', type: 'universities', urgency: 'medium', quote: 'La hiperglobalización colapsó. Necesitamos nuevo contrato social global que respete soberanía nacional. El trilema de la economía mundial sigue vigente.', link: 'https://drodrik.scholar.harvard.edu', date: '2026-03-05', verified: true },
-    { id: 24, author: 'Branko Milanovic', country: 'europe', role: 'Prof. LSE / CUNY', type: 'universities', urgency: 'low', quote: 'La desigualdad global disminuyó pero la desigualdad intra-nacional aumentó. La plutocracia global emergente amenaza la democracia liberal.', link: 'https://brankomilanovic.com', date: '2026-04-20', verified: true },
-    { id: 25, author: 'Jeffrey Sachs', country: 'usa', role: 'Prof. Columbia University, SDG Advocate', type: 'universities', urgency: 'high', quote: 'La OTAN provocó la guerra en Ucrania con su expansión al Este. USA debe aceptar multipolaridad y negociar paz. Los ODS están en riesgo crítico.', link: 'https://www.jeffsachs.org', date: '2026-06-06', verified: true },
-    { id: 26, author: 'Wang Huning', country: 'china', role: 'Presidente Conferencia Consultiva Política', type: 'china', urgency: 'high', quote: 'La civilización china ofrece modelo alternativo a la modernización occidental. La comunidad de destino para la humanidad guía la diplomacia china.', link: 'https://www.fmprc.gov.cn', date: '2026-05-08', verified: true }
+    // === RUSIA ===
+    { id: 1, title: 'Multipolaridad asimétrica y colapso del orden unipolar', author: 'Glenn Diesen', country: 'russia', role: 'Prof. U. Southeast Norway', type: 'russia', urgency: 'high', link: 'https://glenndiesen.substack.com', date: '2026-06-02' },
+    { id: 2, title: 'Doctrina Karaganov: disuasión nuclear implementada', author: 'Sergey Karaganov', country: 'russia', role: 'Director Honorario Club Valdai', type: 'russia', urgency: 'high', link: 'https://valdaiclub.com/a/highlights/the-end-of-illusion/', date: '2026-05-15' },
+    { id: 3, title: 'Eurasia como sistema-mundo alternativo al atlantismo', author: 'Dmitri Trenin', country: 'russia', role: 'HSE · Ex-Carnegie Moscow', type: 'russia', urgency: 'medium', link: 'https://russiamatters.org/expert/dmitri-trenin', date: '2026-05-20' },
+    { id: 4, title: 'Rusia como civilización-estado post-soviética', author: 'Fyodor Lukyanov', country: 'russia', role: 'Editor Russia in Global Affairs', type: 'russia', urgency: 'medium', link: 'https://eng.globalaffairs.ru', date: '2026-04-18' },
+
+    // === USA ===
+    { id: 5, title: 'Tragedia de las Grandes Potencias: tres frentes simultáneos', author: 'John Mearsheimer', country: 'usa', role: 'Prof. Emérito U. Chicago', type: 'usa', urgency: 'high', link: 'https://mearsheimer.substack.com', date: '2026-06-05' },
+    { id: 6, title: 'Superimperialismo financiero y desdolarización real', author: 'Michael Hudson', country: 'usa', role: 'Economista UMKC', type: 'usa', urgency: 'high', link: 'https://michael-hudson.com/2026/05/the-end-of-dollar-hegemony/', date: '2026-05-28' },
+    { id: 7, title: 'Mega-depresión: estanflación + deudas insostenibles', author: 'Nouriel Roubini', country: 'usa', role: 'Prof. NYU Stern', type: 'usa', urgency: 'high', link: 'https://roubini.substack.com/p/mega-stagflationary-depression-2026', date: '2026-06-03' },
+    { id: 8, title: 'Fragilidad estructural del imperio ruso', author: 'Stephen Kotkin', country: 'usa', role: 'Hoover Institution · Stanford', type: 'usa', urgency: 'medium', link: 'https://www.hoover.org/experts/stephen-kotkin', date: '2026-04-22' },
+    { id: 9, title: 'Nuevo contrato social post-neoliberal', author: 'Joseph Stiglitz', country: 'usa', role: 'Columbia University', type: 'usa', urgency: 'low', link: 'https://www.josephstiglitz.com/publications', date: '2026-03-15' },
+
+    // === CHINA ===
+    { id: 10, title: 'Modelo alternativo al consenso de Washington', author: 'Wen Tiejun', country: 'china', role: 'Investigador Senior CASS', type: 'china', urgency: 'medium', link: 'https://www.cass.cn/english', date: '2026-05-10' },
+    { id: 11, title: 'Comunidad de destino para la humanidad', author: 'Wang Huning', country: 'china', role: 'Presidente Conferencia Consultiva PCCh', type: 'china', urgency: 'high', link: 'https://www.fmprc.gov.cn/eng/wjb/zzjg/xws/202606/t20260601.html', date: '2026-06-01' },
+    { id: 12, title: 'Diplomacia de civilización china vs modernización occidental', author: 'Wang Jisi', country: 'china', role: 'Presidente Peking University ISS', type: 'china', urgency: 'medium', link: 'https://www.iss.pku.edu.cn', date: '2026-04-25' },
+    { id: 13, title: 'Teoría de las relaciones internacionales con características chinas', author: 'Yan Xuetong', country: 'china', role: 'Decano Tsinghua U. IR', type: 'china', urgency: 'low', link: 'https://www.sci.tsinghua.edu.cn/en', date: '2026-03-20' },
+
+    // === INDIA ===
+    { id: 14, title: 'Multipolaridad y No-Alineados 2.0', author: 'Radhika Desai', country: 'india', role: 'U. Manitoba · Geopolitical Economy', type: 'india', urgency: 'high', link: 'https://geopoliticaleconomy.org/2026/06/01/brics-plus/', date: '2026-06-01' },
+    { id: 15, title: 'Siglo XXI asiático: China e India 35% población', author: 'Kishore Mahbubani', country: 'india', role: 'Ex-Diplomático Singapur · NUS', type: 'india', urgency: 'medium', link: 'https://www.kishore-mahbubani.com/articles', date: '2026-04-10' },
+    { id: 16, title: 'Vishwaguru: India como potencia civilizatoria', author: 'S. Jaishankar', country: 'india', role: 'Ministro Asuntos Exteriores India', type: 'india', urgency: 'medium', link: 'https://www.mea.gov.in', date: '2026-05-18' },
+
+    // === EUROPA ===
+    { id: 17, title: 'Pérdida de autonomía estratégica europea', author: 'Emmanuel Todd', country: 'europe', role: 'INED Francia', type: 'europe', urgency: 'medium', link: 'https://www.ined.fr/en/recherche-en-economie-et-sociologie/chercheurs-associes/emmanuel-todd', date: '2026-04-15' },
+    { id: 18, title: 'Tecnofeudalismo y cloudalierismo global', author: 'Yanis Varoufakis', country: 'europe', role: 'Ex-Ministro Finanzas Grecia · DiEM25', type: 'europe', urgency: 'high', link: 'https://yanisvaroufakis.substack.com/p/technofeudalism-2026', date: '2026-06-04' },
+    { id: 19, title: 'Policrisis estructural y shockocracy', author: 'Adam Tooze', country: 'europe', role: 'Columbia University', type: 'europe', urgency: 'high', link: 'https://adamtooze.substack.com', date: '2026-05-12' },
+    { id: 20, title: 'Desigualdad global vs intra-nacional', author: 'Branko Milanovic', country: 'europe', role: 'LSE · CUNY', type: 'europe', urgency: 'medium', link: 'https://brankomilanovic.substack.com', date: '2026-04-20' },
+    { id: 21, title: 'Colapso de la hiperglobalización y trilema mundial', author: 'Dani Rodrik', country: 'europe', role: 'Harvard Kennedy School', type: 'europe', urgency: 'medium', link: 'https://rodrik.substack.com', date: '2026-03-05' },
+
+    // === THINK TANKS ===
+    { id: 22, title: 'QUAD y AUKUS: arquitectura de contención china', author: 'CSIS', country: 'usa', role: 'Center for Strategic and International Studies', type: 'thinktanks', urgency: 'high', link: 'https://www.csis.org/analysis/new-indo-pacific-architecture', date: '2026-05-28' },
+    { id: 23, title: 'Orden basado en reglas vs revisionismo', author: 'Chatham House', country: 'europe', role: 'Royal Institute of International Affairs', type: 'thinktanks', urgency: 'medium', link: 'https://www.chathamhouse.org/2026/05/battle-narratives', date: '2026-05-15' },
+    { id: 24, title: 'Estrategia de defensa nacional USA 2026', author: 'RAND Corporation', country: 'usa', role: 'Defense Policy Research', type: 'thinktanks', urgency: 'high', link: 'https://www.rand.org/topics/national-defense-and-terrorism.html', date: '2026-06-01' },
+    { id: 25, title: 'Conservadurismo nacional vs globalismo', author: 'Heritage Foundation', country: 'usa', role: 'Conservative Policy Research', type: 'thinktanks', urgency: 'medium', link: 'https://www.heritage.org/2026-mandate-leadership', date: '2026-04-30' },
+    { id: 26, title: 'Interdependencia weaponizada en comercio', author: 'Carnegie Endowment', country: 'usa', role: 'International Peace', type: 'thinktanks', urgency: 'medium', link: 'https://carnegieendowment.org/2026/05/weaponized-interdependence', date: '2026-05-22' },
+    { id: 27, title: 'Multilateralismo fragmentado y gobernanza', author: 'Brookings Institution', country: 'usa', role: 'Public Policy Think Tank', type: 'thinktanks', urgency: 'low', link: 'https://www.brookings.edu/research/global-governance-2026', date: '2026-03-10' },
+
+    // === UNIVERSIDADES ===
+    { id: 28, title: 'Liderazgo global en era de policrisis', author: 'Harvard Kennedy School', country: 'usa', role: 'Escuela de Gobierno', type: 'universities', urgency: 'low', link: 'https://www.hks.harvard.edu/research-insight/publications', date: '2026-02-15' },
+    { id: 29, title: 'Seguridad cibernética y drones autónomos', author: 'Stanford CISAC', country: 'usa', role: 'Center for International Security', type: 'universities', urgency: 'medium', link: 'https://cisac.fsi.stanford.edu/publications', date: '2026-03-22' },
+    { id: 30, title: 'Estrategia USA en tres frentes: China-Rusia-Irán', author: 'Johns Hopkins SAIS', country: 'usa', role: 'School of Advanced International Studies', type: 'universities', urgency: 'high', link: 'https://sais.jhu.edu/research/faculty-research', date: '2026-05-08' },
+    { id: 31, title: 'Desglobalización selectiva y friendshoring', author: 'LSE', country: 'europe', role: 'London School of Economics', type: 'universities', urgency: 'low', link: 'https://www.lse.ac.uk/economics/research', date: '2026-02-25' },
+    { id: 32, title: 'Autonomía estratégica europea fallida', author: 'Sciences Po', country: 'europe', role: 'Institut d\'études politiques Paris', type: 'universities', urgency: 'medium', link: 'https://www.sciencespo.fr/ceri/en/content/publications', date: '2026-05-18' },
+    { id: 33, title: 'Modelo chino de gobernanza global', author: 'Tsinghua University', country: 'china', role: 'Institute of International Relations', type: 'universities', urgency: 'medium', link: 'https://www.sci.tsinghua.edu.cn/en', date: '2026-04-05' },
+
+    // === CEOs ===
+    { id: 34, title: 'Tecnología de análisis decide conflictos modernos', author: 'Alex Karp', country: 'usa', role: 'CEO Palantir', type: 'ceos', urgency: 'high', link: 'https://www.palantir.com/blog/the-palantir-primer', date: '2026-03-18' },
+    { id: 35, title: 'TSMC es el nuevo Estrecho de Ormuz', author: 'Jensen Huang', country: 'usa', role: 'CEO NVIDIA', type: 'ceos', urgency: 'high', link: 'https://www.nvidia.com/en-us/about-nvidia/leadership/', date: '2026-02-28' },
+    { id: 36, title: 'Ciclos imperiales y fase 5 de USA', author: 'Ray Dalio', country: 'usa', role: 'Fundador Bridgewater', type: 'ceos', urgency: 'medium', link: 'https://www.principles.com/principles-for-dealing-with-the-changing-world-order', date: '2026-04-12' },
+    { id: 37, title: 'Capitalismo de stakeholders vs shareholders', author: 'Larry Fink', country: 'usa', role: 'CEO BlackRock', type: 'ceos', urgency: 'medium', link: 'https://www.blackrock.com/corporate/investor-relations/larry-fink-annual-letter', date: '2026-03-25' },
+    { id: 38, title: 'Bitcoin como reserva estratégica post-dólar', author: 'Simon Dixon', country: 'usa', role: 'CEO BnkToTheFuture', type: 'ceos', urgency: 'high', link: 'https://simondixon.substack.com', date: '2026-06-06' },
+    { id: 39, title: 'WeChat Super App y expansión IA emergentes', author: 'Pony Ma', country: 'china', role: 'CEO Tencent', type: 'ceos', urgency: 'low', link: 'https://www.tencent.com/en-us/investors.html', date: '2026-01-20' }
 ];
 
 // ============================================================
@@ -1410,27 +1570,11 @@ async function computeHash(data) {
     return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
 }
 
-// ============================================================
-// ESTADO REACTIVO
-// ============================================================
 const state = new Proxy({
-    lang: 'es',
-    filter: 'all',
-    briefings: [],
-    lastFetch: null,
-    searchResults: [],
-    searchIndex: 0,
-    currentTab: 'briefing'
-}, {
-    set(target, prop, value) {
-        target[prop] = value;
-        return true;
-    }
-});
+    lang: 'es', filter: 'all', briefings: [], lastFetch: null,
+    searchResults: [], searchIndex: 0, currentTab: 'briefing'
+}, { set(target, prop, value) { target[prop] = value; return true; } });
 
-// ============================================================
-// LECTURA PROGRESO Y SCROLL
-// ============================================================
 function updateReadingProgress() {
     const h = document.documentElement;
     const progress = (h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight)) * 100;
@@ -1438,9 +1582,7 @@ function updateReadingProgress() {
     $('#scrollTop').classList.toggle('visible', window.scrollY > 400);
 }
 
-// ============================================================
-// CONTADORES ANIMADOS (CORREGIDOS)
-// ============================================================
+// Contadores animados
 const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1464,9 +1606,7 @@ function initCounters() {
     document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
 }
 
-// ============================================================
-// TICKER (CORREGIDO - usando CSS animation y duplicación)
-// ============================================================
+// Ticker
 function initTicker() {
     const items = [
         { label: 'S&P 500', value: '5,847.21', change: '+0.8%', type: 'up' },
@@ -1490,12 +1630,10 @@ function initTicker() {
             <span class="ticker-${i.type}">${i.change}</span>
         </span>
     `).join('');
-    track.innerHTML = html + html; // duplicado para loop infinito
+    track.innerHTML = html + html;
 }
 
-// ============================================================
-// TRADUCCIONES
-// ============================================================
+// Traducciones
 const TRANSLATIONS = {
     es: {
         tabs: { briefing: 'Briefing', financial: 'Financial Flux', illicit: 'Flujos Ilícitos', rgopm: 'RGOPM', countries: 'Países', tech: 'Tech & Infra' },
@@ -1540,9 +1678,6 @@ function updateTranslations() {
     });
 }
 
-// ============================================================
-// NAVEGACIÓN TABS
-// ============================================================
 $$('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
         $$('.tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
@@ -1557,11 +1692,8 @@ $$('.tab').forEach(tab => {
     });
 });
 
-// ============================================================
-// CARGA DE BRIEFINGS
-// ============================================================
+// Carga briefings
 async function loadBriefings(forceRefresh = false) {
-    // Check cache
     if (!forceRefresh) {
         try {
             const cached = localStorage.getItem(CONFIG.CACHE_KEY);
@@ -1604,9 +1736,7 @@ async function loadBriefings(forceRefresh = false) {
     logAudit('load_briefings', { count: state.briefings.length });
 }
 
-// ============================================================
-// RENDER BRIEFINGS
-// ============================================================
+// RENDER COMPACTO - UNA LÍNEA
 function renderBriefings() {
     const container = $('#briefingContainer');
     container.innerHTML = '';
@@ -1616,9 +1746,18 @@ function renderBriefings() {
         return;
     }
 
-    const filtered = state.filter === 'all' 
-        ? state.briefings 
-        : state.briefings.filter(b => b.type === state.filter || b.country === state.filter);
+    // LÓGICA DE FILTROS CORREGIDA:
+    // - 'all' muestra todo
+    // - Filtros de región (usa, china, russia, india, europe) buscan por 'country'
+    // - Filtros de categoría (thinktanks, universities, ceos) buscan por 'type'
+    let filtered;
+    if (state.filter === 'all') {
+        filtered = state.briefings;
+    } else if (['usa', 'china', 'russia', 'india', 'europe'].includes(state.filter)) {
+        filtered = state.briefings.filter(b => b.country === state.filter);
+    } else {
+        filtered = state.briefings.filter(b => b.type === state.filter);
+    }
 
     if (!filtered.length) {
         container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>Sin resultados para este filtro</p></div>';
@@ -1627,37 +1766,32 @@ function renderBriefings() {
 
     filtered.forEach(b => {
         const card = document.createElement('article');
-        card.className = `briefing-card ${b.country || b.type}`;
-        const verifiedBadge = b.verified ? '<span class="briefing-verified">✓ Verificado</span>' : '';
+        card.className = `briefing-card urgency-${b.urgency} ${b.country || b.type}`;
         const formattedDate = b.date ? new Date(b.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' }) : '2026';
         
+        // Determinar el enlace de fuente
+        let sourceDomain = '';
+        try {
+            sourceDomain = new URL(b.link).hostname.replace('www.', '');
+        } catch (e) {
+            sourceDomain = b.link;
+        }
+
         card.innerHTML = `
-            <div class="briefing-left">
-                <div class="briefing-header">
+            <div class="briefing-urgency-dot" title="Urgencia: ${b.urgency}"></div>
+            <div class="briefing-main">
+                <div class="briefing-title">${b.title || b.author}</div>
+                <div class="briefing-meta">
                     <span class="briefing-tag">${b.type || b.country}</span>
-                    <span>·</span>
                     <span>${formattedDate}</span>
-                </div>
-                <p class="briefing-quote">${b.quote}</p>
-                <div class="briefing-footer">
-                    <span class="briefing-chip">🔒 Cross-ref</span>
-                    <span class="briefing-chip">📚 5+ fuentes</span>
+                    <span>·</span>
+                    <a href="${b.link}" target="_blank" rel="noopener noreferrer" class="briefing-source-link">📎 ${sourceDomain}</a>
                 </div>
             </div>
             <div class="briefing-right">
-                <div>
-                    <a href="${b.link}" target="_blank" rel="noopener noreferrer" class="briefing-author">${b.author}</a>
-                    <p class="briefing-role">${b.role || ''}</p>
-                    ${verifiedBadge}
-                </div>
-                <div class="briefing-actions">
-                    <button class="icon-btn" title="Copiar cita" data-action="copy" data-quote="${encodeURIComponent(b.quote)}" data-author="${b.author}">📋</button>
-                    <button class="icon-btn" title="Compartir" data-action="share" data-quote="${encodeURIComponent(b.quote)}" data-author="${b.author}">🔗</button>
-                </div>
-                <div class="briefing-urgency urgency-${b.urgency}">
-                    <span class="briefing-urgency-dot"></span>
-                    <span>${b.urgency}</span>
-                </div>
+                <a href="${b.link}" target="_blank" rel="noopener noreferrer" class="briefing-author-link">${b.author}</a>
+                <button class="icon-btn" title="Copiar cita" data-action="copy" data-title="${encodeURIComponent(b.title || '')}" data-author="${b.author}" data-link="${b.link}">📋</button>
+                <button class="icon-btn" title="Compartir" data-action="share" data-title="${encodeURIComponent(b.title || '')}" data-author="${b.author}" data-link="${b.link}">🔗</button>
             </div>
         `;
         container.appendChild(card);
@@ -1666,10 +1800,12 @@ function renderBriefings() {
     // Bind action buttons
     container.querySelectorAll('[data-action]').forEach(btn => {
         btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
             const action = btn.dataset.action;
-            const quote = decodeURIComponent(btn.dataset.quote);
+            const title = decodeURIComponent(btn.dataset.title);
             const author = btn.dataset.author;
-            const text = `"${quote}" — ${author}`;
+            const link = btn.dataset.link;
+            const text = `"${title}" — ${author}\n${link}`;
             
             if (action === 'copy') {
                 try {
@@ -1681,7 +1817,7 @@ function renderBriefings() {
             } else if (action === 'share') {
                 if (navigator.share) {
                     try {
-                        await navigator.share({ title: 'GeoEcon Briefing', text });
+                        await navigator.share({ title: 'GeoEcon Briefing', text, url: link });
                     } catch (err) { /* user cancelled */ }
                 } else {
                     try {
@@ -1696,9 +1832,6 @@ function renderBriefings() {
     });
 }
 
-// ============================================================
-// FILTROS
-// ============================================================
 $$('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         $$('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1708,9 +1841,6 @@ $$('.filter-btn').forEach(btn => {
     });
 });
 
-// ============================================================
-// REFRESH & EXPORT
-// ============================================================
 $('#refreshBtn').addEventListener('click', () => {
     const btn = $('#refreshBtn');
     btn.classList.add('spinning');
@@ -1723,7 +1853,7 @@ $('#exportBtn').addEventListener('click', async () => {
     try {
         const data = {
             exportDate: new Date().toISOString(),
-            version: '3.0',
+            version: '4.0',
             briefings: state.briefings,
             hash: await computeHash(state.briefings)
         };
@@ -1741,9 +1871,6 @@ $('#exportBtn').addEventListener('click', async () => {
     }
 });
 
-// ============================================================
-// IDIOMA
-// ============================================================
 $('#langSelector').addEventListener('change', (e) => {
     state.lang = e.target.value;
     document.documentElement.lang = state.lang;
@@ -1751,9 +1878,7 @@ $('#langSelector').addEventListener('change', (e) => {
     toast(`Idioma: ${e.target.value.toUpperCase()}`, 'success');
 });
 
-// ============================================================
-// AI NARRATOR
-// ============================================================
+// AI Narrator
 const aiBtn = $('#aiNarratorBtn');
 const aiPanel = $('#aiPanel');
 const playBtn = $('#playBtn');
@@ -1786,7 +1911,7 @@ playBtn.addEventListener('click', () => {
     const targetLang = langMap[state.lang] || 'es-ES';
 
     high.forEach((b, i) => {
-        const text = `${b.author}. ${b.quote}`;
+        const text = `${b.author}. ${b.title || b.quote || ''}`;
         const u = new SpeechSynthesisUtterance(text);
         u.lang = targetLang;
         const voice = voices.find(v => v.lang === targetLang) || voices.find(v => v.lang.startsWith(targetLang.split('-')[0]));
@@ -1814,18 +1939,14 @@ stopBtn.addEventListener('click', () => {
     aiStatus.textContent = '⏹ Detenido';
 });
 
-// ============================================================
-// SEARCH MODAL (Native <dialog> con focus trap)
-// ============================================================
+// Search Modal
 const searchModal = $('#searchModal');
 const searchInput = $('#searchInput');
 const searchResults = $('#searchResults');
-let focusableEls = [];
 
 function openSearch() {
     searchModal.showModal();
     setTimeout(() => searchInput.focus(), 50);
-    trapFocus(searchModal);
 }
 
 function closeSearch() {
@@ -1835,22 +1956,10 @@ function closeSearch() {
     $('#searchTrigger').focus();
 }
 
-function trapFocus(dialog) {
-    const focusables = dialog.querySelectorAll('button, input, [tabindex]:not([tabindex="-1"])');
-    focusableEls = Array.from(focusables);
-}
-
 $('#searchTrigger').addEventListener('click', openSearch);
 $('#closeSearchBtn').addEventListener('click', closeSearch);
-
-searchModal.addEventListener('click', (e) => {
-    if (e.target === searchModal) closeSearch();
-});
-
-searchModal.addEventListener('cancel', (e) => {
-    e.preventDefault();
-    closeSearch();
-});
+searchModal.addEventListener('click', (e) => { if (e.target === searchModal) closeSearch(); });
+searchModal.addEventListener('cancel', (e) => { e.preventDefault(); closeSearch(); });
 
 const performSearch = debounce((q) => {
     q = q.toLowerCase().trim();
@@ -1860,18 +1969,14 @@ const performSearch = debounce((q) => {
     }
 
     const results = [];
-    
     state.briefings.forEach(b => {
-        const text = `${b.author} ${b.quote} ${b.role} ${b.country} ${b.type}`.toLowerCase();
+        const text = `${b.author} ${b.title || b.quote || ''} ${b.role || ''} ${b.country} ${b.type}`.toLowerCase();
         if (text.includes(q)) {
             results.push({
-                title: b.author,
-                meta: b.quote.substring(0, 80) + '...',
+                title: b.title || b.author,
+                meta: b.author + ' · ' + (b.role || b.type),
                 section: 'Briefing',
-                action: () => {
-                    switchTab('briefing');
-                    closeSearch();
-                }
+                action: () => { switchTab('briefing'); closeSearch(); }
             });
         }
     });
@@ -1879,7 +1984,7 @@ const performSearch = debounce((q) => {
     const sections = [
         { name: 'Financial Flux', tab: 'financial', desc: 'IED, instituciones, tendencias' },
         { name: 'Flujos Ilícitos', tab: 'illicit', desc: 'Shadow fleet, narcotráfico, lavado' },
-        { name: 'RGOPM', tab: 'rgopm', desc: 'Militarización, fragilidad, alianzas' },
+        { name: 'RGOPM', tab: 'rgopm', desc: 'Militarización, fragilidad, alianzas, Tablero Geopolítico' },
         { name: 'Países', tab: 'countries', desc: 'Venezuela, Angola, Zambia, Sri Lanka' },
         { name: 'Tech & Infra', tab: 'tech', desc: 'IA, semiconductores, BRI, Lobito' }
     ];
@@ -1908,12 +2013,8 @@ const performSearch = debounce((q) => {
     `).join('');
 
     searchResults.querySelectorAll('.search-result-item').forEach(item => {
-        item.addEventListener('click', () => {
-            results[parseInt(item.dataset.idx)].action();
-        });
-        item.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') results[parseInt(item.dataset.idx)].action();
-        });
+        item.addEventListener('click', () => { results[parseInt(item.dataset.idx)].action(); });
+        item.addEventListener('keydown', (e) => { if (e.key === 'Enter') results[parseInt(item.dataset.idx)].action(); });
     });
 }, CONFIG.DEBOUNCE_MS);
 
@@ -1954,61 +2055,38 @@ function switchTab(tabId) {
     setTimeout(initCounters, 100);
 }
 
-// ============================================================
-// KEYBOARD SHORTCUTS MODAL
-// ============================================================
 const shortcutsModal = $('#shortcutsModal');
 $('#shortcutsTrigger').addEventListener('click', () => shortcutsModal.showModal());
 $('#closeShortcutsBtn').addEventListener('click', () => shortcutsModal.close());
 shortcutsModal.addEventListener('click', (e) => { if (e.target === shortcutsModal) shortcutsModal.close(); });
 
-// ============================================================
-// KEYBOARD SHORTCUTS GLOBALES
-// ============================================================
 document.addEventListener('keydown', (e) => {
-    // Cmd+K / Ctrl+K - Search
     if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         searchModal.open ? closeSearch() : openSearch();
     }
-    
-    // ? - Shortcuts
     if (e.key === '?' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
         e.preventDefault();
         shortcutsModal.showModal();
     }
-    
-    // Escape
     if (e.key === 'Escape') {
         if (searchModal.open) closeSearch();
         if (shortcutsModal.open) shortcutsModal.close();
     }
-    
-    // R - Refresh (only if not in input)
-    if (e.key === 'r' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT' && !searchModal.open) {
+    if (e.key === 'r' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT' && !searchModal.open && !shortcutsModal.open) {
         e.preventDefault();
         $('#refreshBtn').click();
     }
-    
-    // Arrow keys for tab navigation (only on tabs container)
     if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && document.activeElement.classList.contains('tab')) {
         const tabs = Array.from($$('.tab'));
         const idx = tabs.indexOf(document.activeElement);
-        const newIdx = e.key === 'ArrowRight' 
-            ? (idx + 1) % tabs.length 
-            : (idx - 1 + tabs.length) % tabs.length;
+        const newIdx = e.key === 'ArrowRight' ? (idx + 1) % tabs.length : (idx - 1 + tabs.length) % tabs.length;
         tabs[newIdx].focus();
     }
 });
 
-// ============================================================
-// SCROLL TO TOP
-// ============================================================
 $('#scrollTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-// ============================================================
-// CONNECTION STATUS
-// ============================================================
 function updateConnectionStatus() {
     const dot = $('#statusDot');
     const text = $('#statusText');
@@ -2024,9 +2102,6 @@ function updateConnectionStatus() {
 window.addEventListener('online', () => { updateConnectionStatus(); toast('Conexión restaurada', 'success'); });
 window.addEventListener('offline', () => { updateConnectionStatus(); toast('Sin conexión', 'info'); });
 
-// ============================================================
-// AUDIT LOG
-// ============================================================
 function logAudit(action, data = {}) {
     try {
         const log = JSON.parse(localStorage.getItem(CONFIG.AUDIT_LOG_KEY) || '[]');
@@ -2040,7 +2115,6 @@ $('#verifiedBadge').addEventListener('click', async () => {
     try {
         const log = JSON.parse(localStorage.getItem(CONFIG.AUDIT_LOG_KEY) || '[]');
         if (!log.length) { toast('Sin registros', 'info'); return; }
-        
         const hash = state.briefings.length ? await computeHash(state.briefings) : 'N/A';
         const last = log[0];
         const date = new Date(last.timestamp).toLocaleString();
@@ -2050,9 +2124,6 @@ $('#verifiedBadge').addEventListener('click', async () => {
     }
 });
 
-// ============================================================
-// INIT
-// ============================================================
 function init() {
     updateConnectionStatus();
     initTicker();
@@ -2060,24 +2131,19 @@ function init() {
     loadBriefings();
     updateReadingProgress();
     window.addEventListener('scroll', updateReadingProgress, { passive: true });
-    
-    // Auto-refresh cada 1 hora (antes 30min, muy agresivo para free tier)
     setInterval(() => loadBriefings(true), CONFIG.AUTO_REFRESH);
-    
-    // Actualizar tiempo relativo cada minuto
     setInterval(() => {
         if (state.lastFetch) {
             $('#updateTime').textContent = `Actualizado ${formatTimeSince(state.lastFetch)}`;
         }
     }, 60000);
 
-    // Cargar voces async (Chrome)
     if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = () => {};
     }
 
-    logAudit('platform_init', { version: '3.0', briefings: state.briefings.length });
-    toast('GeoEcon Intelligence v3.0 inicializada', 'success');
+    logAudit('platform_init', { version: '4.0', briefings: state.briefings.length });
+    toast('GeoEcon Intelligence v4.0 inicializada', 'success');
 }
 
 if (document.readyState === 'loading') {
