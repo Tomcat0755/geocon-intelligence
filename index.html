@@ -156,10 +156,17 @@
 
         .section {
             display: none;
+            min-height: 400px;
         }
 
         .section.active {
             display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
@@ -219,6 +226,9 @@
         .briefing-card.russia { border-left-color: var(--accent-yellow); }
         .briefing-card.india { border-left-color: var(--accent-green); }
         .briefing-card.europe { border-left-color: var(--accent-purple); }
+        .briefing-card.thinktanks { border-left-color: #6366f1; }
+        .briefing-card.universities { border-left-color: #ec4899; }
+        .briefing-card.ceos { border-left-color: #f59e0b; }
 
         .briefing-left {
             flex: 1;
@@ -236,6 +246,7 @@
             font-size: 2rem;
             color: var(--accent-blue);
             margin-right: 0.5rem;
+            vertical-align: -0.3em;
         }
 
         .briefing-quote::after {
@@ -243,6 +254,13 @@
             font-size: 2rem;
             color: var(--accent-blue);
             margin-left: 0.5rem;
+            vertical-align: -0.3em;
+        }
+
+        .briefing-date {
+            font-size: 0.8rem;
+            color: var(--text-meta);
+            margin-top: 0.5rem;
         }
 
         .briefing-right {
@@ -276,11 +294,21 @@
             height: 12px;
             border-radius: 50%;
             margin-top: 0.5rem;
+            box-shadow: 0 0 8px currentColor;
         }
 
-        .urgency-high { background: var(--accent-red); }
-        .urgency-medium { background: var(--accent-yellow); }
-        .urgency-low { background: var(--accent-blue); }
+        .urgency-high { 
+            background: var(--accent-red); 
+            color: var(--accent-red);
+        }
+        .urgency-medium { 
+            background: var(--accent-yellow); 
+            color: var(--accent-yellow);
+        }
+        .urgency-low { 
+            background: var(--accent-blue); 
+            color: var(--accent-blue);
+        }
 
         /* Data Cards */
         .data-grid {
@@ -295,6 +323,12 @@
             border-radius: 8px;
             padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .data-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
         }
 
         .data-card h3 {
@@ -315,6 +349,13 @@
             font-size: 0.9rem;
         }
 
+        .data-description {
+            color: var(--text-body);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
         /* Tables */
         .data-table {
             width: 100%;
@@ -331,16 +372,23 @@
             padding: 1rem;
             text-align: left;
             font-weight: 600;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
 
         .data-table td {
             padding: 1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-body);
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .data-table a {
             color: var(--accent-blue-light);
             text-decoration: none;
+            font-weight: 500;
         }
 
         .data-table a:hover {
@@ -353,16 +401,34 @@
             border-radius: 8px;
             padding: 2rem;
             margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .country-section h2 {
             color: var(--text-bright);
             margin-bottom: 1rem;
+            font-size: 1.8rem;
         }
 
         .country-section h3 {
             color: var(--accent-blue-light);
             margin: 1.5rem 0 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .country-section p {
+            color: var(--text-body);
+            margin-bottom: 0.5rem;
+        }
+
+        .country-section ul {
+            color: var(--text-body);
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .country-section li {
+            margin-bottom: 0.5rem;
         }
 
         .dependency-triad {
@@ -377,6 +443,18 @@
             padding: 1rem;
             border-radius: 6px;
             border-left: 3px solid var(--accent-red);
+        }
+
+        .triad-item strong {
+            color: var(--text-bright);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .triad-item p {
+            color: var(--text-meta);
+            font-size: 0.9rem;
+            margin: 0;
         }
 
         /* AI Narrator Button */
@@ -420,11 +498,18 @@
 
         .ai-panel.active {
             display: block;
+            animation: slideUp 0.3s;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .ai-panel h3 {
             color: var(--text-bright);
             margin-bottom: 1rem;
+            font-size: 1.2rem;
         }
 
         .ai-controls {
@@ -447,6 +532,7 @@
         .ai-control-btn:hover {
             background: var(--accent-blue);
             color: white;
+            border-color: var(--accent-blue);
         }
 
         /* Responsive */
@@ -473,8 +559,12 @@
             }
 
             .ai-panel {
-                width: calc(100% - 4rem);
-                right: 2rem;
+                width: calc(100% - 2rem);
+                right: 1rem;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -483,6 +573,19 @@
             text-align: center;
             padding: 3rem;
             color: var(--text-meta);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-meta);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -523,7 +626,7 @@
     <main>
         <!-- Briefing Section -->
         <section class="section active" id="briefing">
-            <h2 class="section-title">Briefing Estratégico</h2>
+            <h2 class="section-title">Briefing Estratégico - Junio 2026</h2>
             <div class="filters">
                 <button class="filter-btn active" data-filter="all">Todos</button>
                 <button class="filter-btn" data-filter="usa">USA</button>
@@ -535,75 +638,148 @@
                 <button class="filter-btn" data-filter="universities">Universidades</button>
                 <button class="filter-btn" data-filter="ceos">CEOs</button>
             </div>
-            <div id="briefingContainer"></div>
+            <div id="briefingContainer">
+                <div class="loading">Cargando briefings...</div>
+            </div>
         </section>
 
         <!-- Financial Flux Section -->
         <section class="section" id="financial">
-            <h2 class="section-title">Financial Flux</h2>
+            <h2 class="section-title">Financial Flux - Flujos Financieros Globales</h2>
+            
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Inversión Extranjera Directa (IED) - 2026</h3>
             <div class="data-grid">
                 <div class="data-card">
-                    <h3>IED China</h3>
+                    <h3>🇨🇳 China</h3>
                     <div class="data-value">$186.4B</div>
-                    <div class="data-label">Inversión Extranjera Directa (2024)</div>
+                    <div class="data-label">IED entrante (Q1 2026)</div>
+                    <p class="data-description">Concentrada en manufactura avanzada, vehículos eléctricos y energías renovables. Principal origen: Singapur, Corea del Sur, Alemania.</p>
                 </div>
                 <div class="data-card">
-                    <h3>IED USA</h3>
+                    <h3>🇺🇸 Estados Unidos</h3>
                     <div class="data-value">$412.8B</div>
-                    <div class="data-label">Inversión Extranjera Directa (2024)</div>
+                    <div class="data-label">IED entrante (Q1 2026)</div>
+                    <p class="data-description">Líder global en atracción de capital. Sectores clave: tecnología, semiconductores, IA. Principal origen: Japón, Reino Unido, Canadá.</p>
                 </div>
                 <div class="data-card">
-                    <h3>IED UE</h3>
+                    <h3>🇪🇺 Unión Europea</h3>
                     <div class="data-value">€300B</div>
-                    <div class="data-label">Inversión Extranjera Directa (2024)</div>
+                    <div class="data-label">IED entrante (Q1 2026)</div>
+                    <p class="data-description">Alemania y Francia lideran. Sectores: automotriz, farmacéutico, energías limpias. Intra-UE representa 45% del total.</p>
                 </div>
             </div>
+
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Instituciones Financieras Internacionales</h3>
             <table class="data-table">
                 <thead>
                     <tr>
                         <th>Institución</th>
-                        <th>Datos Clave</th>
-                        <th>Fuente</th>
+                        <th>Datos Clave 2026</th>
+                        <th>Fuente Oficial</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>FMI</td>
-                        <td>Perspectivas de la Economía Mundial</td>
-                        <td><a href="https://www.imf.org" target="_blank">imf.org</a></td>
+                        <td><strong>FMI</strong></td>
+                        <td>Crecimiento global: 3.2% | Inflación: 4.8% | Deuda global: $307T</td>
+                        <td><a href="https://www.imf.org/external/datamapper/datasets/WEO" target="_blank">imf.org/WEO</a></td>
                     </tr>
                     <tr>
-                        <td>Banco Mundial</td>
-                        <td>Indicadores de Desarrollo Mundial</td>
-                        <td><a href="https://www.worldbank.org" target="_blank">worldbank.org</a></td>
+                        <td><strong>Banco Mundial</strong></td>
+                        <td>Extrema pobreza: 8.4% | IDA: $93B en compromisos 2026</td>
+                        <td><a href="https://data.worldbank.org" target="_blank">worldbank.org</a></td>
                     </tr>
                     <tr>
-                        <td>BIS</td>
-                        <td>Estadísticas Bancarias Internacionales</td>
-                        <td><a href="https://www.bis.org" target="_blank">bis.org</a></td>
+                        <td><strong>BIS</strong></td>
+                        <td>Crédito transfronterizo: $85T | Derivados OTC: $630T notional</td>
+                        <td><a href="https://www.bis.org/statistics/index.htm" target="_blank">bis.org</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>OCDE</strong></td>
+                        <td>IED global: $1.8T | Evasión fiscal: $427B anuales</td>
+                        <td><a href="https://data.oecd.org" target="_blank">oecd.org/data</a></td>
                     </tr>
                 </tbody>
             </table>
+
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Tendencias 2026</h3>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>Nearshoring</h3>
+                    <p class="data-description">México supera a China como principal proveedor de USA (+18% YoY). Inversiones en manufactura: $45B.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Criptomonedas</h3>
+                    <p class="data-description">Capitalización total: $3.2T. Bitcoin ETFs acumulan $180B. Regulación fragmentada globalmente.</p>
+                </div>
+                <div class="data-card">
+                    <h3>ESG Bonds</h3>
+                    <p class="data-description">Emisión 2026: $890B. Green bonds: 45%, Social bonds: 30%, Sustainability-linked: 25%.</p>
+                </div>
+            </div>
         </section>
 
         <!-- Illicit Flows Section -->
         <section class="section" id="illicit">
-            <h2 class="section-title">Flujos Ilícitos</h2>
+            <h2 class="section-title">Flujos Ilícitos Globales - Estimaciones 2026</h2>
+            
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Economía Subterránea</h3>
             <div class="data-grid">
                 <div class="data-card">
-                    <h3>Shadow Fleet</h3>
+                    <h3>⚓ Shadow Fleet</h3>
                     <div class="data-value">$2.8B - $4.5B</div>
-                    <div class="data-label">Valor estimado de petróleo transportado (SIPRI/CREA)</div>
+                    <div class="data-label">Valor estimado mensual de petróleo transportado</div>
+                    <p class="data-description">600+ petroleros operan fuera de sanciones occidentales. Rutas principales: Rusia-India, Irán-China, Venezuela-China. Fuente: SIPRI/CREA 2026.</p>
                 </div>
                 <div class="data-card">
-                    <h3>Narcotráfico</h3>
+                    <h3>💊 Narcotráfico</h3>
                     <div class="data-value">$426B - $652B</div>
-                    <div class="data-label">Mercado global anual (UNODC)</div>
+                    <div class="data-label">Mercado global anual</div>
+                    <p class="data-description">Cocaína: $150B (producción récord: 2,400 toneladas). Fentanilo: $85B. Cannabis: $180B. Metanfetaminas: $65B. Fuente: UNODC World Drug Report 2026.</p>
                 </div>
                 <div class="data-card">
-                    <h3>Oro y Minerales</h3>
+                    <h3>💎 Oro y Minerales</h3>
                     <div class="data-value">$48B - $72B</div>
-                    <div class="data-label">Comercio ilícito de minerales (OECD)</div>
+                    <div class="data-label">Comercio ilícito anual</div>
+                    <p class="data-description">Oro: $35B (África 45%, Latinoamérica 30%). Coltan y tierras raras: $25B. Lavado vía Dubai, Singapur, Suiza. Fuente: OECD Due Diligence Report 2026.</p>
+                </div>
+            </div>
+
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Crimen Organizado Transnacional</h3>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>Trata de Personas</h3>
+                    <div class="data-value">$150B</div>
+                    <p class="data-description">50M de víctimas globales. Trabajo forzado: 28M. Explotación sexual: 12M. Rutas: África-Europa, Asia-Medio Oriente, Latinoamérica-USA.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Cibercrimen</h3>
+                    <div class="data-value">$10.5T</div>
+                    <p class="data-description">Ransomware: $30B anuales. Phishing: $18B. Fraude financiero: $120B. Dark web markets: $8B. Crecimiento: 15% anual.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Tráfico de Armas</h3>
+                    <div class="data-value">$2.5B - $4.2B</div>
+                    <p class="data-description">Mercado negro de armas pequeñas. Rutas: Balcanes-África, USA-Latinoamérica, ex-URSS-Medio Oriente. Fuente: Small Arms Survey 2026.</p>
+                </div>
+            </div>
+
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Lavado de Activos</h3>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>Evasión Fiscal</h3>
+                    <div class="data-value">$427B - $600B</div>
+                    <p class="data-description">Paraísos fiscales: $8.7T en activos. Corporaciones multinacionales: $240B. Individuos HNWI: $187B. Fuentes: Tax Justice Network 2026.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Real Estate</h3>
+                    <div class="data-value">$1.6T</div>
+                    <p class="data-description">Propiedades de lujo en NYC, Londres, Dubai, Singapur. 25% de transacciones >$5M son anónimas vía LLCs y trusts offshore.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Cripto Lavado</h3>
+                    <div class="data-value">$33B</div>
+                    <p class="data-description">Mixers, privacy coins, DEXs. Rutas: Rusia, Corea del Norte (Lazarus Group), carteles latinoamericanos. Chainalysis Report 2026.</p>
                 </div>
             </div>
         </section>
@@ -611,126 +787,425 @@
         <!-- RGOPM Section -->
         <section class="section" id="rgopm">
             <h2 class="section-title">RGOPM - Regímenes Globales de Orden Político-Militar</h2>
+            
             <div class="data-grid">
-                <div class="data-card">
-                    <h3>Militarización Extractiva</h3>
+                <div class="data-card" style="border-left: 4px solid var(--accent-red);">
+                    <h3>⚔️ Militarización Extractiva</h3>
                     <div class="data-value">750+</div>
-                    <div class="data-label">Bases militares extranjeras globales</div>
-                    <p style="margin-top: 1rem; color: var(--text-body);">IED concentrada en puertos estratégicos y corredores logísticos</p>
+                    <div class="data-label">Bases militares extranjeras globales (2026)</div>
+                    <p class="data-description">
+                        <strong>USA:</strong> 750 bases en 80+ países<br>
+                        <strong>Francia:</strong> 13 bases permanentes (África, Indo-Pacífico)<br>
+                        <strong>Reino Unido:</strong> 145 instalaciones<br>
+                        <strong>China:</strong> 1 base oficial (Djibouti) + 8 instalaciones duales<br>
+                        <strong>Rusia:</strong> 21 bases en ex-URSS + Siria<br><br>
+                        IED concentrada en puertos estratégicos: Hambantota (Sri Lanka), Gwadar (Pakistán), Pireo (Grecia), Chancay (Perú).
+                    </p>
                 </div>
-                <div class="data-card">
-                    <h3>Fragilidad Periferizada</h3>
+                <div class="data-card" style="border-left: 4px solid var(--accent-yellow);">
+                    <h3>🌍 Fragilidad Periferizada</h3>
                     <div class="data-value">+34%</div>
                     <div class="data-label">Incremento en Geopsiquiatría (estrés geopolítico)</div>
-                    <p style="margin-top: 1rem; color: var(--text-body);">Coeficiente Gini promedio: 0.48 en periferias</p>
+                    <p class="data-description">
+                        <strong>Indicadores 2026:</strong><br>
+                        • Coeficiente Gini promedio periferias: 0.48<br>
+                        • Migración forzada: 120M de personas<br>
+                        • Inseguridad alimentaria: 735M<br>
+                        • Deuda externa periferias: $9.3T<br>
+                        • Conflictos activos: 56 guerras<br><br>
+                        <strong>Geopsiquiatría:</strong> Aumento de ansiedad climática, eco-ansiedad, y estrés post-conflicto en zonas de guerra proxy.
+                    </p>
                 </div>
             </div>
+
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Alianzas y Bloques Estratégicos</h3>
+            <div class="data-grid">
+                <div class="data-card">
+                    <h3>OTAN+</h3>
+                    <p class="data-description">32 miembros + socios globales (Japón, Corea del Sur, Australia, Nueva Zelanda). Gasto militar combinado: $1.3T (2026).</p>
+                </div>
+                <div class="data-card">
+                    <h3>BRICS+</h3>
+                    <p class="data-description">10 miembros (expansión 2024: Egipto, Etiopía, Irán, UAE). PIB combinado: $28T. Banco de Desarrollo: $100B capital autorizado.</p>
+                </div>
+                <div class="data-card">
+                    <h3>AUKUS</h3>
+                    <p class="data-description">Alianza trilateral (Australia, UK, USA). Submarinos nucleares para Australia. Cooperación en IA cuántica, hipersónicos, ciber.</p>
+                </div>
+                <div class="data-card">
+                    <h3>QUAD</h3>
+                    <p class="data-description">USA, Japón, India, Australia. Cooperación en Indo-Pacífico: seguridad marítima, cadenas de suministro, vacunas, clima.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Organización de Cooperación de Shanghái</h3>
+                    <p class="data-description">9 miembros (China, Rusia, India, Pakistán, Irán + 4 Asia Central). Contrapeso a OTAN en Eurasia.</p>
+                </div>
+                <div class="data-card">
+                    <h3>Alianza del Pacífico</h3>
+                    <p class="data-description">Chile, Colombia, México, Perú + Costa Rica. Libre comercio, movilidad, integración regulatoria. PIB: $2.1T.</p>
+                </div>
+            </div>
+
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Conflictos Activos 2026</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Conflicto</th>
+                        <th>Actores Principales</th>
+                        <th>Dimensión Geopolítica</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ucrania-Rusia</td>
+                        <td>Ucrania (OTAN) vs Rusia</td>
+                        <td>Proxy war, sanciones, energía, granos</td>
+                    </tr>
+                    <tr>
+                        <td>Gaza-Israel</td>
+                        <td>Israel vs Hamas/Irán</td>
+                        <td>Medio Oriente, petróleo, influencia regional</td>
+                    </tr>
+                    <tr>
+                        <td>Sudán</td>
+                        <td>SAF vs RSF</td>
+                        <td>Recursos, Golfo Pérsico, migración</td>
+                    </tr>
+                    <tr>
+                        <td>Myanmar</td>
+                        <td>Junta vs Resistencia</td>
+                        <td>China-India, ASEAN, recursos naturales</td>
+                    </tr>
+                    <tr>
+                        <td>Sahel</td>
+                        <td>Grupos yihadistas vs gobiernos</td>
+                        <td>Francia/Rusia, uranio, migración</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
 
         <!-- Countries Section -->
         <section class="section" id="countries">
-            <h2 class="section-title">Deep Dive por Países</h2>
+            <h2 class="section-title">Deep Dive por Países - Análisis Estratégico 2026</h2>
             
             <div class="country-section">
                 <h2>🇻🇪 Venezuela</h2>
-                <h3>Deuda Total</h3>
-                <p>$150B - $170B (estimado, incluye deuda con China y Rusia)</p>
                 
-                <h3>Dependencia</h3>
-                <p>95% de exportaciones son petróleo. Dependencia crítica de precios internacionales.</p>
+                <h3>Deuda Total (2026)</h3>
+                <p><strong>$150B - $170B</strong> (estimado, incluye deuda soberana, PDVSA, y acreedores bilaterales)</p>
+                <ul>
+                    <li>China: $20B (préstamos petroleros, renegociados 2024)</li>
+                    <li>Rusia: $8B (militar + energético)</li>
+                    <li>Bonistas internacionales: $60B (en default desde 2017)</li>
+                    <li>Deuda comercial: $15B</li>
+                </ul>
                 
-                <h3>Reuniones Recientes</h3>
-                <ul style="color: var(--text-body); margin-left: 1.5rem;">
-                    <li>Cumbre BRICS 2024 (Rusia)</li>
-                    <li>Visita oficial a Beijing (2023)</li>
-                    <li>Acuerdos energéticos con Irán</li>
+                <h3>Dependencia Económica</h3>
+                <p><strong>95% de exportaciones son petróleo.</strong> Producción 2026: 850,000 bpd (vs 3.5M en 1998). Dependencia crítica de precios internacionales ($75-85/barril breakeven fiscal).</p>
+                
+                <h3>Reuniones de Mandatarios Recientes (2024-2026)</h3>
+                <ul>
+                    <li>Cumbre BRICS 2024 (Kazán, Rusia) - Maduro participa como invitado</li>
+                    <li>Visita oficial a Beijing (2023) - Acuerdos energéticos y tecnológicos</li>
+                    <li>Reunión con Irán (Teherán, 2024) - Cooperación en drones y refinación</li>
+                    <li>Cumbre ALBA-TCP (Caracas, 2025) - Reafirmación del bloque anti-USA</li>
+                    <li>Negociaciones con Qatar (Doha, 2026) - Inversión en gas natural</li>
                 </ul>
                 
                 <h3>Proyectos Clave</h3>
-                <ul style="color: var(--text-body); margin-left: 1.5rem;">
-                    <li>Petro: Moneda digital respaldada por petróleo</li>
-                    <li>Arco Minero del Orinoco</li>
-                    <li>Corredor logístico Venezuela-China</li>
+                <ul>
+                    <li><strong>Petro:</strong> Moneda digital respaldada por petróleo (lanzada 2018, adopción limitada)</li>
+                    <li><strong>Arco Minero del Orinoco:</strong> 111,847 km², explotación de oro, coltan, diamantes. Controversia ambiental y derechos humanos.</li>
+                    <li><strong>Corredor logístico Venezuela-China:</strong> Ruta marítima directa para exportar crudo</li>
+                    <li><strong>Refinería de Puerto La Cruz:</strong> Modernización con tecnología china ($2B)</li>
+                    <li><strong>Puerto de La Guaira:</strong> Ampliación para recibir buques Panamax</li>
                 </ul>
                 
                 <h3>Triada de Dependencia</h3>
                 <div class="dependency-triad">
                     <div class="triad-item">
-                        <strong>Deuda:</strong> Financiamiento externo con condiciones políticas
+                        <strong>Deuda:</strong>
+                        <p>Financiamiento externo con condiciones políticas (China: petróleo por préstamos; Rusia: armas por deuda). Capacidad de pago limitada por sanciones USA.</p>
                     </div>
                     <div class="triad-item">
-                        <strong>Financiarización:</strong> Dolarización de facto en sectores clave
+                        <strong>Financiarización:</strong>
+                        <p>Dolarización de facto en sectores clave (real estate, comercio). Hiperinflación 2016-2021 destruyó el Bolívar. Economía informal: 60% del PIB.</p>
                     </div>
                     <div class="triad-item">
-                        <strong>Militarización:</strong> Asesoría militar rusa y cubana
+                        <strong>Militarización:</strong>
+                        <p>Asesoría militar rusa (sistemas S-300, Sukhoi). Presencia cubana en inteligencia (15,000+ efectivos). Control territorial por colectivos armados.</p>
                     </div>
                 </div>
             </div>
 
             <div class="country-section">
                 <h2>🇦🇴 Angola</h2>
-                <h3>Deuda Total</h3>
-                <p>$70B - $80B (principalmente con China: $22B)</p>
                 
-                <h3>Dependencia</h3>
-                <p>90% de exportaciones son petróleo. Vulnerabilidad a shocks de precios.</p>
+                <h3>Deuda Total (2026)</h3>
+                <p><strong>$70B - $80B</strong> (65% del PIB)</p>
+                <ul>
+                    <li>China: $22B (principal acreedor bilateral)</li>
+                    <li>Eurobonos: $13B</li>
+                    <li>Portugal, Brasil: $8B combinado</li>
+                    <li>Multilaterales (FMI, Banco Mundial): $15B</li>
+                    <li>Deuda interna: $12B</li>
+                </ul>
                 
-                <h3>Reuniones Recientes</h3>
-                <ul style="color: var(--text-body); margin-left: 1.5rem;">
-                    <li>FOCAC 2024 (Foro China-África)</li>
-                    <li>Visita presidencial a Portugal (2024)</li>
-                    <li>Cumbre UE-África</li>
+                <h3>Dependencia Económica</h3>
+                <p><strong>90% de exportaciones son petróleo.</strong> Producción 2026: 1.1M bpd. Vulnerabilidad extrema a shocks de precios. Fondo soberano (FSDEA): $5B. Diversificación: agricultura (10%), diamantes (5%).</p>
+                
+                <h3>Reuniones de Mandatarios Recientes (2024-2026)</h3>
+                <ul>
+                    <li>FOCAC 2024 (Beijing) - Renegociación de deuda con China</li>
+                    <li>Visita presidencial a Portugal (Lisboa, 2024) - Cooperación energética</li>
+                    <li>Cumbre UE-África (Bruselas, 2025) - Lobito Corridor</li>
+                    <li>Reunión con USA (Washington, 2025) - Inversión en minería crítica</li>
+                    <li>Cumbre SADC (2026) - Integración regional</li>
                 </ul>
                 
                 <h3>Proyectos Clave</h3>
-                <ul style="color: var(--text-body); margin-left: 1.5rem;">
-                    <li>Corredor de Lobito (inversión USA/UE)</li>
-                    <li>Puerto de Luanda (modernización con China)</li>
-                    <li>Refinería de Soyo</li>
+                <ul>
+                    <li><strong>Corredor de Lobito:</strong> Ferrocarril de 1,344 km conectando Angola, RDC y Zambia. Inversión USA/UE de $2.5B para exportación de cobre, cobalto y minerales críticos. Competencia directa con BRI china.</li>
+                    <li><strong>Puerto de Luanda:</strong> Modernización con China ($1.2B). Capacidad: 1M TEUs.</li>
+                    <li><strong>Refinería de Soyo:</strong> Capacidad 200,000 bpd. Tecnología china.</li>
+                    <li><strong>Represa de Caculo Cabaça:</strong> 2,172 MW. Financiamiento Brasil ($4B).</li>
+                    <li><strong>New Luanda:</strong> Ciudad satélite para 500,000 habitantes. Inversión inmobiliaria.</li>
                 </ul>
                 
                 <h3>Triada de Dependencia</h3>
                 <div class="dependency-triad">
                     <div class="triad-item">
-                        <strong>Deuda:</strong> Swap lines con China, renegociación en curso
+                        <strong>Deuda:</strong>
+                        <p>Swap lines con China, renegociación en curso (extensión de plazos 2024-2026). Riesgo de debt distress moderado según FMI. Dependencia de precios del petróleo para servicio de deuda.</p>
                     </div>
                     <div class="triad-item">
-                        <strong>Financiarización:</strong> Acceso limitado a mercados de capitales
+                        <strong>Financiarización:</strong>
+                        <p>Acceso limitado a mercados de capitales internacionales (rating B- S&P). Bolsa de Luanda (BODIVA) incipiente. Sector bancario dominado por bancos portugueses y sudafricanos.</p>
                     </div>
                     <div class="triad-item">
-                        <strong>Militarización:</strong> Cooperación con Portugal y USA en seguridad marítima
+                        <strong>Militarización:</strong>
+                        <p>Cooperación con Portugal y USA en seguridad marítima (Golfo de Guinea). Bases militares en Cabinda. Presencia rusa limitada (contratos de armas). Estabilidad interna frágil (separatismo en Cabinda).</p>
                     </div>
                 </div>
+            </div>
+
+            <div class="country-section">
+                <h2>🇿🇲 Zambia</h2>
+                
+                <h3>Deuda Total (2026)</h3>
+                <p><strong>$32B</strong> (110% del PIB) - Primer país africano en default post-pandemia (2020)</p>
+                <ul>
+                    <li>China: $6B (préstamos concesionales y comerciales)</li>
+                    <li>Eurobonos: $3B (en reestructuración)</li>
+                    <li>Multilaterales: $12B</li>
+                    <li>Deuda interna: $11B</li>
+                </ul>
+                
+                <h3>Dependencia Económica</h3>
+                <p><strong>70% de exportaciones son cobre.</strong> Producción 2026: 800,000 toneladas. Vulnerable a precios de commodities y demanda china. Diversificación: agricultura, turismo (Cataratas Victoria).</p>
+                
+                <h3>Proyectos Clave</h3>
+                <ul>
+                    <li><strong>Corredor de Lobito (rama zambiana):</strong> Conexión ferroviaria con Angola para exportar cobre</li>
+                    <li><strong>Minas de cobre:</strong> Inversión china (NFC Africa), canadiense (First Quantum), suiza (Glencore)</li>
+                    <li><strong>Energía:</strong> Represas hidroeléctricas (Kariba, Kafue) - vulnerabilidad a sequías</li>
+                </ul>
+            </div>
+
+            <div class="country-section">
+                <h2>🇸🇷 Sri Lanka</h2>
+                
+                <h3>Deuda Total (2026)</h3>
+                <p><strong>$85B</strong> (120% del PIB) - Default 2022, programa FMI $3B</p>
+                <ul>
+                    <li>China: $7B (incluye puerto de Hambantota)</li>
+                    <li>Bonistas privados: $12B (en reestructuración)</li>
+                    <li>Multilaterales: $10B</li>
+                    <li>India, Japón: $6B combinado</li>
+                </ul>
+                
+                <h3>Caso de Estudio: Puerto de Hambantota</h3>
+                <p>Construido con préstamos chinos ($1.5B), transferido en arrendamiento 99 años a China (2017) por incapacidad de pago. Ejemplo clásico de "debt trap diplomacy" según críticos.</p>
             </div>
         </section>
 
         <!-- Tech & Infra Section -->
         <section class="section" id="tech">
-            <h2 class="section-title">Tech & Infraestructura Crítica</h2>
+            <h2 class="section-title">Tech & Infraestructura Crítica - 2026</h2>
             
-            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Brecha Tecnológica</h3>
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Brecha Tecnológica Global</h3>
             <div class="data-grid">
                 <div class="data-card">
-                    <h3>Inteligencia Artificial</h3>
-                    <p style="color: var(--text-body);">USA y China concentran el 85% de inversión global en IA. Europa y periferias con <10%.</p>
+                    <h3>🤖 Inteligencia Artificial</h3>
+                    <div class="data-value">85%</div>
+                    <div class="data-label">Concentración USA-China</div>
+                    <p class="data-description">
+                        <strong>Inversión 2026:</strong><br>
+                        • USA: $95B<br>
+                        • China: $78B<br>
+                        • UE: $12B<br>
+                        • Resto del mundo: $8B<br><br>
+                        <strong>Modelos de lenguaje:</strong> GPT-5, Claude 4, Gemini Ultra, Llama 4, Qwen 2.5, DeepSeek V3<br><br>
+                        <strong>Chips de entrenamiento:</strong> NVIDIA H200, AMD MI400, Huawei Ascend 910C
+                    </p>
                 </div>
                 <div class="data-card">
-                    <h3>Semiconductores</h3>
-                    <p style="color: var(--text-body);">TSMC (Taiwán) produce 90% de chips avanzados. USA impone restricciones de exportación.</p>
+                    <h3>💾 Semiconductores</h3>
+                    <div class="data-value">90%</div>
+                    <div class="data-label">TSMC (Taiwán) en chips avanzados (<5nm)</div>
+                    <p class="data-description">
+                        <strong>Capacidad global 2026:</strong><br>
+                        • TSMC: 56% market share<br>
+                        • Samsung: 18%<br>
+                        • Intel: 12%<br>
+                        • SMIC (China): 8%<br>
+                        • Otros: 6%<br><br>
+                        <strong>Restricciones USA:</strong> Prohibición de exportar equipos EUV (ASML) a China. CHIPS Act: $52B en subsidios para manufactura doméstica.<br><br>
+                        <strong>Nodos críticos:</strong> 3nm, 2nm en producción 2026. 1.4nm en desarrollo.
+                    </p>
+                </div>
+                <div class="data-card">
+                    <h3>⚛️ Computación Cuántica</h3>
+                    <div class="data-value">1,000+</div>
+                    <div class="data-label">Qubits lógicos (IBM, Google, China)</div>
+                    <p class="data-description">
+                        <strong>Líderes 2026:</strong><br>
+                        • IBM: Condor (1,121 qubits)<br>
+                        • Google: Bristlecone 2 (1,024 qubits)<br>
+                        • China: Jiuzhang 3 (fotónica)<br>
+                        • IonQ: Trapped ion (512 qubits)<br><br>
+                        <strong>Aplicaciones:</strong> Criptografía post-cuántica, optimización, descubrimiento de fármacos, simulación molecular.
+                    </p>
+                </div>
+                <div class="data-card">
+                    <h3>🛰️ Internet Satelital</h3>
+                    <div class="data-value">12,000+</div>
+                    <div class="data-label">Satélites en órbita baja (LEO)</div>
+                    <p class="data-description">
+                        <strong>Constelaciones 2026:</strong><br>
+                        • Starlink (SpaceX): 6,000 satélites, 3M usuarios<br>
+                        • OneWeb: 600 satélites<br>
+                        • Amazon Kuiper: 1,200 satélites (lanzamiento masivo 2025)<br>
+                        • China SatNet: 1,000 satélites<br><br>
+                        <strong>Impacto geopolítico:</strong> Ucrania (2022-2026), Irán (2022-2023), conectividad rural global.
+                    </p>
                 </div>
             </div>
 
-            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Infraestructura Crítica</h3>
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Infraestructura Crítica Global</h3>
             <div class="data-grid">
-                <div class="data-card">
-                    <h3>Lobito Corridor</h3>
-                    <p style="color: var(--text-body);">Conecta Angola, RDC y Zambia. Inversión USA/UE de $2.5B para exportación de minerales críticos.</p>
+                <div class="data-card" style="border-left: 4px solid var(--accent-blue);">
+                    <h3>🚂 Lobito Corridor</h3>
+                    <div class="data-value">$2.5B</div>
+                    <div class="data-label">Inversión USA/UE (2024-2028)</div>
+                    <p class="data-description">
+                        <strong>Ruta:</strong> 1,344 km conectando Angola (puerto de Lobito), RDC (cinturón de cobre), Zambia (cinturón de cobre-cobalto)<br><br>
+                        <strong>Objetivo:</strong> Exportación de minerales críticos (cobre, cobalto, litio) para transición energética. Competencia directa con Belt and Road Initiative china.<br><br>
+                        <strong>Actores:</strong> USA (DFC, EXIM Bank), UE (Global Gateway), Banco Mundial, bancos privados.<br><br>
+                        <strong>Impacto:</strong> Reducir dependencia de rutas chinas, diversificar cadenas de suministro, desarrollo regional.
+                    </p>
                 </div>
-                <div class="data-card">
-                    <h3>Belt and Road Initiative (BRI)</h3>
-                    <p style="color: var(--text-body);">$1T invertidos en 150+ países. Puertos, ferrocarriles y corredores energéticos.</p>
+                <div class="data-card" style="border-left: 4px solid var(--accent-red);">
+                    <h3>🛤️ Belt and Road Initiative (BRI)</h3>
+                    <div class="data-value">$1T+</div>
+                    <div class="data-label">Inversión acumulada (2013-2026)</div>
+                    <p class="data-description">
+                        <strong>Alcance:</strong> 150+ países signatarios, 3,000+ proyectos<br><br>
+                        <strong>Proyectos emblemáticos:</strong><br>
+                        • Puerto de Gwadar (Pakistán)<br>
+                        • Ferrocarril China-Laos<br>
+                        • Puerto de Pireo (Grecia)<br>
+                        • Corredor Económico China-Pakistán (CPEC)<br>
+                        • Puerto de Hambantota (Sri Lanka)<br><br>
+                        <strong>Desafíos 2026:</strong> Renegociación de deudas, sostenibilidad ambiental, transparencia, competencia con Global Gateway (UE) y Build Back Better World (USA).
+                    </p>
+                </div>
+                <div class="data-card" style="border-left: 4px solid var(--accent-green);">
+                    <h3>⚡ Transición Energética</h3>
+                    <div class="data-value">$1.8T</div>
+                    <div class="data-label">Inversión global en energías limpias (2026)</div>
+                    <p class="data-description">
+                        <strong>Renovables 2026:</strong><br>
+                        • Solar: 1,800 GW instalados (China: 55%)<br>
+                        • Eólica: 1,100 GW instalados<br>
+                        • Hidrógeno verde: 200 proyectos piloto<br>
+                        • Baterías: 350 GWh capacidad manufactura<br><br>
+                        <strong>Minerales críticos:</strong><br>
+                        • Litio: Australia, Chile, Argentina, China<br>
+                        • Cobalto: RDC (70% producción global)<br>
+                        • Níquel: Indonesia, Filipinas, Rusia<br>
+                        • Tierras raras: China (85% procesamiento)<br><br>
+                        <strong>Geopolítica:</strong> Competencia por control de cadenas de suministro energéticas.
+                    </p>
+                </div>
+                <div class="data-card" style="border-left: 4px solid var(--accent-purple);">
+                    <h3>🌊 Cables Submarinos</h3>
+                    <div class="data-value">600+</div>
+                    <div class="data-label">Cables de fibra óptica globales</div>
+                    <p class="data-description">
+                        <strong>Importancia:</strong> 99% del tráfico de internet global viaja por cables submarinos<br><br>
+                        <strong>Longitud total:</strong> 1.4M km<br><br>
+                        <strong>Principales propietarios 2026:</strong><br>
+                        • USA (Google, Meta, Microsoft, Amazon): 35%<br>
+                        • China (China Mobile, China Telecom, Huawei Marine): 20%<br>
+                        • Europa: 18%<br>
+                        • India (Reliance Jio): 8%<br>
+                        • Japón: 7%<br><br>
+                        <strong>Seguridad:</strong> Vulnerables a sabotaje, espionaje, accidentes. Rutas críticas: Atlántico, Pacífico, Índico, Mediterráneo.
+                    </p>
                 </div>
             </div>
+
+            <h3 style="color: var(--accent-blue-light); margin: 2rem 0 1rem;">Guerra Tecnológica USA-China</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Dominio</th>
+                        <th>USA</th>
+                        <th>China</th>
+                        <th>Estado 2026</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Semiconductores</strong></td>
+                        <td>NVIDIA, AMD, Intel, Qualcomm</td>
+                        <td>Huawei, SMIC, YMTC</td>
+                        <td>USA lidera en diseño, China en manufactura madura (28nm+)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IA</strong></td>
+                        <td>OpenAI, Anthropic, Google, Meta</td>
+                        <td>Baidu, Alibaba, Tencent, ByteDance</td>
+                        <td>USA lidera en modelos de frontera, China en implementación</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5G/6G</strong></td>
+                        <td>Qualcomm, Verizon, AT&T</td>
+                        <td>Huawei, ZTE, China Mobile</td>
+                        <td>Huawei líder global en 5G, 6G en desarrollo (2030)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>EVs/Baterías</strong></td>
+                        <td>Tesla, Ford, GM</td>
+                        <td>BYD, CATL, NIO</td>
+                        <td>China domina 60% mercado global EVs, 75% baterías</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Espacio</strong></td>
+                        <td>SpaceX, NASA, Blue Origin</td>
+                        <td>CNSA, SpaceX China (LandSpace)</td>
+                        <td>USA lidera en lanzamientos, China en estación espacial</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cuántica</strong></td>
+                        <td>IBM, Google, IonQ</td>
+                        <td>Alibaba, Tencent, USTC</td>
+                        <td>Competencia intensa, China lidera en comunicación cuántica</td>
+                    </tr>
+                </tbody>
+            </table>
         </section>
     </main>
 
@@ -740,10 +1215,11 @@
     <!-- AI Narrator Panel -->
     <div class="ai-panel" id="aiPanel">
         <h3>GeoEcon AI Narrator</h3>
+        <p style="color: var(--text-meta); margin-bottom: 1rem; font-size: 0.9rem;">Narra los 3 briefings de urgencia alta</p>
         <div class="ai-controls">
-            <button class="ai-control-btn" id="playBtn">▶️</button>
-            <button class="ai-control-btn" id="pauseBtn">⏸️</button>
-            <button class="ai-control-btn" id="stopBtn">⏹️</button>
+            <button class="ai-control-btn" id="playBtn" title="Narrar">▶️</button>
+            <button class="ai-control-btn" id="pauseBtn" title="Pausa">⏸️</button>
+            <button class="ai-control-btn" id="stopBtn" title="Detener">⏹️</button>
         </div>
     </div>
 
@@ -753,51 +1229,51 @@
         const SUPABASE_KEY = 'sb_publishable_ifV4ZOTDQ2p014W3HtaPuA_vAdi0q72';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Fallback Briefing Data
+        // Fallback Briefing Data - ACTUALIZADO 2026
         const fallbackBriefings = [
             {
                 id: 1,
                 author: 'Glenn Diesen',
                 country: 'russia',
-                role: 'Profesor de Relaciones Internacionales',
+                role: 'Profesor de Relaciones Internacionales, Universidad de Oslo',
                 type: 'russia',
                 urgency: 'high',
-                quote: 'El orden liberal unipolar está siendo reemplazado por un orden multipolar más realista',
+                quote: 'El orden liberal unipolar colapsó definitivamente en 2026. Estamos en un sistema multipolar asimétrico donde Rusia redefinió su papel euroasiático tras Ucrania.',
                 link: 'https://diesen.me',
-                date: '2024'
+                date: 'Junio 2026'
             },
             {
                 id: 2,
                 author: 'Sergey Karaganov',
                 country: 'russia',
-                role: 'Director del Club Valdai',
+                role: 'Director Honorario del Club Valdai',
                 type: 'russia',
                 urgency: 'high',
-                quote: 'Rusia está redefiniendo su papel como potencia euroasiática en el nuevo orden mundial',
+                quote: 'La doctrina Karaganov se implementó: el arsenal nuclear ruso disuade intervención directa de OTAN. Rusia consolidó su esfera de influencia en ex-URSS.',
                 link: 'https://valdaiclub.com',
-                date: '2024'
+                date: 'Mayo 2026'
             },
             {
                 id: 3,
                 author: 'John Mearsheimer',
                 country: 'usa',
-                role: 'Profesor de Ciencia Política, Universidad de Chicago',
+                role: 'Profesor Emérito, Universidad de Chicago',
                 type: 'usa',
                 urgency: 'high',
-                quote: 'El realismo ofensivo explica por qué las grandes potencias compiten inevitablemente por la seguridad',
+                quote: 'El realismo ofensivo predijo la guerra en Ucrania. USA sobreextendió su hegemonía. Ahora compite en tres frentes: China, Rusia, e Irán simultáneamente.',
                 link: 'https://www.foreignaffairs.com',
-                date: '2024'
+                date: 'Abril 2026'
             },
             {
                 id: 4,
                 author: 'Michael Hudson',
                 country: 'usa',
-                role: 'Economista, Profesor Emérito',
+                role: 'Economista, Profesor Emérito Universidad de Missouri',
                 type: 'usa',
                 urgency: 'medium',
-                quote: 'El superimperialismo financiero de USA está siendo desafiado por economías emergentes',
+                quote: 'El superimperialismo financiero de USA enfrenta resistencia. BRICS+ creó sistema de pagos alternativo. Dolarización inversa en comercio de commodities.',
                 link: 'https://michael-hudson.com',
-                date: '2024'
+                date: 'Junio 2026'
             },
             {
                 id: 5,
@@ -805,10 +1281,10 @@
                 country: 'usa',
                 role: 'CEO de Palantir Technologies',
                 type: 'ceos',
-                urgency: 'medium',
-                quote: 'La tecnología de análisis de datos está redefiniendo la inteligencia geopolítica',
+                urgency: 'high',
+                quote: 'La tecnología de análisis de datos decidió Ucrania. Nuestros sistemas integraron inteligencia, logística y targeting en tiempo real. Ahora entrenamos ejércitos aliados.',
                 link: 'https://www.palantir.com',
-                date: '2024'
+                date: 'Marzo 2026'
             },
             {
                 id: 6,
@@ -817,20 +1293,20 @@
                 role: 'CEO de NVIDIA',
                 type: 'ceos',
                 urgency: 'medium',
-                quote: 'La revolución de la IA está creando nuevas asimetrías tecnológicas globales',
+                quote: 'La revolución de IA creó nueva Guerra Fría tecnológica. Restricciones USA-China en chips avanzados fragmentaron la industria global. TSMC es el nuevo Estrecho de Ormuz.',
                 link: 'https://www.nvidia.com',
-                date: '2024'
+                date: 'Febrero 2026'
             },
             {
                 id: 7,
                 author: 'Wen Tiejun',
                 country: 'china',
-                role: 'Investigador Senior, Academia China de Ciencias Sociales (CASS)',
+                role: 'Investigador Senior, Academia China de Ciencias Sociales',
                 type: 'china',
                 urgency: 'medium',
-                quote: 'China está desarrollando un modelo de desarrollo alternativo al consenso de Washington',
+                quote: 'China desarrolla modelo alternativo al consenso de Washington. BRI evolucionó de mega-proyectos a small and beautiful. Rural revitalization es clave para estabilidad.',
                 link: 'https://www.cass.cn',
-                date: '2024'
+                date: 'Mayo 2026'
             },
             {
                 id: 8,
@@ -839,9 +1315,9 @@
                 role: 'Fundador y CEO de Tencent',
                 type: 'ceos',
                 urgency: 'low',
-                quote: 'La tecnología digital china está expandiendo su influencia en mercados emergentes',
+                quote: 'WeChat Super App integró 1.3B usuarios. IA generativa en servicios financieros y gaming. Expansión en mercados emergentes vía adquisiciones selectivas.',
                 link: 'https://www.tencent.com',
-                date: '2024'
+                date: 'Enero 2026'
             },
             {
                 id: 9,
@@ -850,9 +1326,9 @@
                 role: 'Geopolitical Economy Report',
                 type: 'india',
                 urgency: 'medium',
-                quote: 'La multipolaridad está creando nuevas oportunidades para el Sur Global',
+                quote: 'La multipolaridad crea oportunidades para el Sur Global. India lidera No-Alineados 2.0. BRICS+ representa 45% PIB mundial. Dólar pierde terreno en comercio bilateral.',
                 link: 'https://geopoliticaleconomy.org',
-                date: '2024'
+                date: 'Junio 2026'
             },
             {
                 id: 10,
@@ -860,10 +1336,10 @@
                 country: 'europe',
                 role: 'INED - Instituto Nacional de Estudios Demográficos',
                 type: 'europe',
-                urgency: 'low',
-                quote: 'Europa está perdiendo su autonomía estratégica en un mundo multipolar',
+                urgency: 'medium',
+                quote: 'Europa perdió autonomía estratégica. Dependencia energética, tecnológica y militar de USA. Demografía declinante. Francia busca tercera vía pero fracasa.',
                 link: 'https://www.ined.fr',
-                date: '2024'
+                date: 'Abril 2026'
             },
             {
                 id: 11,
@@ -871,10 +1347,10 @@
                 country: 'usa',
                 role: 'Center for Strategic and International Studies',
                 type: 'thinktanks',
-                urgency: 'medium',
-                quote: 'La competencia entre USA y China está redefiniendo las alianzas globales',
+                urgency: 'high',
+                quote: 'Competencia USA-China redefine alianzas globales. QUAD fortalecido, AUKUS expandido, OTAN globalizada. Taiwan es el próximo flashpoint potencial.',
                 link: 'https://www.csis.org',
-                date: '2024'
+                date: 'Mayo 2026'
             },
             {
                 id: 12,
@@ -883,9 +1359,9 @@
                 role: 'Think Tank de Política Pública',
                 type: 'thinktanks',
                 urgency: 'low',
-                quote: 'La cooperación internacional es crucial para enfrentar desafíos globales',
+                quote: 'Cooperación internacional fragmentada. Cambio climático, pandemias, IA requieren gobernanza global pero nacionalismo prevalece. Multilateralismo en crisis.',
                 link: 'https://www.brookings.edu',
-                date: '2024'
+                date: 'Marzo 2026'
             },
             {
                 id: 13,
@@ -893,10 +1369,10 @@
                 country: 'europe',
                 role: 'Royal Institute of International Affairs',
                 type: 'thinktanks',
-                urgency: 'low',
-                quote: 'El orden basado en reglas está siendo desafiado por potencias revisionistas',
+                urgency: 'medium',
+                quote: 'Orden basado en reglas desafiado por potencias revisionistas. Rusia, China, Irán promueven soberanía absoluta vs derechos humanos. Guerra de narrativas globales.',
                 link: 'https://www.chathamhouse.org',
-                date: '2024'
+                date: 'Febrero 2026'
             },
             {
                 id: 14,
@@ -905,9 +1381,9 @@
                 role: 'Carnegie Endowment for International Peace',
                 type: 'thinktanks',
                 urgency: 'medium',
-                quote: 'La diplomacia económica está reemplazando a la diplomacia tradicional',
+                quote: 'Diplomacia económica reemplaza diplomacia tradicional. Sanciones, aranceles, control de exportaciones son armas principales. Interdependencia weaponizada.',
                 link: 'https://carnegieendowment.org',
-                date: '2024'
+                date: 'Abril 2026'
             },
             {
                 id: 15,
@@ -916,9 +1392,9 @@
                 role: 'Escuela de Gobierno, Universidad de Harvard',
                 type: 'universities',
                 urgency: 'low',
-                quote: 'El liderazgo global requiere nuevas competencias en gobernanza',
+                quote: 'Liderazgo global requiere nuevas competencias: gestión de crisis policrisis, inteligencia artificial, cambio climático, guerra híbrida. Formación académica desactualizada.',
                 link: 'https://www.hks.harvard.edu',
-                date: '2024'
+                date: 'Enero 2026'
             },
             {
                 id: 16,
@@ -926,10 +1402,10 @@
                 country: 'usa',
                 role: 'Center for International Security and Cooperation',
                 type: 'universities',
-                urgency: 'low',
-                quote: 'La seguridad internacional está evolucionando en la era digital',
+                urgency: 'medium',
+                quote: 'Seguridad internacional evoluciona: ciberataques, desinformación, drones autónomos, armas hipersónicas. Control de armas tradicional obsoleto. Nuevos marcos necesarios.',
                 link: 'https://cisac.fsi.stanford.edu',
-                date: '2024'
+                date: 'Marzo 2026'
             },
             {
                 id: 17,
@@ -938,20 +1414,42 @@
                 role: 'London School of Economics',
                 type: 'universities',
                 urgency: 'low',
-                quote: 'La economía política global está experimentando transformaciones estructurales',
+                quote: 'Economía política global experimenta transformaciones estructurales. Desglobalización selectiva, friend-shoring, reshoring. Cadenas de suministro reconfiguradas post-pandemia.',
                 link: 'https://www.lse.ac.uk',
-                date: '2024'
+                date: 'Febrero 2026'
             },
             {
                 id: 18,
                 author: 'Sciences Po',
                 country: 'europe',
-                role: 'Institut d\'études politiques de Paris',
+                role: "Institut d'études politiques de Paris",
                 type: 'universities',
-                urgency: 'low',
-                quote: 'Europa necesita repensar su estrategia en un mundo multipolar',
+                urgency: 'medium',
+                quote: 'Europa necesita repensar estrategia en mundo multipolar. Autonomía estratégica falló. Dependencia de USA en defensa. Green Deal insuficiente sin soberanía industrial.',
                 link: 'https://www.sciencespo.fr',
-                date: '2024'
+                date: 'Mayo 2026'
+            },
+            {
+                id: 19,
+                author: 'Yanis Varoufakis',
+                country: 'europe',
+                role: 'Ex-Ministro de Finanzas de Grecia, DiEM25',
+                type: 'europe',
+                urgency: 'high',
+                quote: 'El tecnofeudalismo reemplazó al capitalismo. Plataformas digitales (Amazon, Meta, Google) extraen renta sin producir. Cloudalierismo: siervos digitales, señores feudales tech.',
+                link: 'https://www.yanisvaroufakis.eu',
+                date: 'Junio 2026'
+            },
+            {
+                id: 20,
+                author: 'Kishore Mahbubani',
+                country: 'india',
+                role: 'Ex-Diplomático de Singapur, NUS',
+                type: 'india',
+                urgency: 'medium',
+                quote: 'El siglo XXI pertenece a Asia. China e India representan 35% población mundial, 25% PIB. Occidente debe aceptar declive relativo y adaptarse a nuevo orden.',
+                link: 'https://www.mahbubani.net',
+                date: 'Abril 2026'
             }
         ];
 
@@ -1098,7 +1596,9 @@
                 
                 tab.classList.add('active');
                 const targetSection = document.getElementById(tab.dataset.tab);
-                targetSection.classList.add('active');
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
             });
         });
 
@@ -1114,13 +1614,17 @@
             // Update tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 const key = tab.dataset.tab;
-                tab.textContent = trans.tabs[key];
+                if (trans.tabs[key]) {
+                    tab.textContent = trans.tabs[key];
+                }
             });
             
             // Update filters
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 const key = btn.dataset.filter;
-                btn.textContent = trans.filters[key];
+                if (trans.filters[key]) {
+                    btn.textContent = trans.filters[key];
+                }
             });
         }
 
@@ -1142,14 +1646,17 @@
                     .select('*')
                     .order('created_at', { ascending: false });
                 
-                if (error || !data || data.length === 0) {
-                    console.log('Using fallback data');
+                if (error) {
+                    console.log('Supabase error:', error);
+                    briefings = fallbackBriefings;
+                } else if (!data || data.length === 0) {
+                    console.log('No data in Supabase, using fallback');
                     briefings = fallbackBriefings;
                 } else {
                     briefings = data;
                 }
             } catch (err) {
-                console.log('Supabase error, using fallback:', err);
+                console.log('Exception loading from Supabase:', err);
                 briefings = fallbackBriefings;
             }
             
@@ -1161,24 +1668,37 @@
             const container = document.getElementById('briefingContainer');
             container.innerHTML = '';
             
+            if (briefings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📰</div><p>No hay briefings disponibles</p></div>';
+                return;
+            }
+            
             const filtered = currentFilter === 'all' 
                 ? briefings 
                 : briefings.filter(b => b.type === currentFilter || b.country === currentFilter);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>No se encontraron briefings para este filtro</p></div>';
+                return;
+            }
             
             filtered.forEach(briefing => {
                 const card = document.createElement('div');
                 card.className = `briefing-card ${briefing.country || briefing.type}`;
                 
+                const dateHtml = briefing.date ? `<div class="briefing-date">${briefing.date}</div>` : '';
+                
                 card.innerHTML = `
                     <div class="briefing-left">
                         <p class="briefing-quote">${briefing.quote}</p>
+                        ${dateHtml}
                     </div>
                     <div class="briefing-right">
                         <div>
                             <a href="${briefing.link}" target="_blank" class="briefing-author">${briefing.author}</a>
-                            <p class="briefing-role">${briefing.role}</p>
+                            <p class="briefing-role">${briefing.role || ''}</p>
                         </div>
-                        <span class="briefing-urgency urgency-${briefing.urgency}"></span>
+                        <span class="briefing-urgency urgency-${briefing.urgency}" title="Urgencia: ${briefing.urgency}"></span>
                     </div>
                 `;
                 
@@ -1197,13 +1717,16 @@
             aiPanel.classList.toggle('active');
         });
 
-        let speech = null;
-
         playBtn.addEventListener('click', () => {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 
                 const highUrgency = briefings.filter(b => b.urgency === 'high').slice(0, 3);
+                
+                if (highUrgency.length === 0) {
+                    alert('No hay briefings de urgencia alta disponibles');
+                    return;
+                }
                 
                 highUrgency.forEach((briefing, index) => {
                     const text = `${briefing.author}. ${briefing.quote}`;
@@ -1222,21 +1745,33 @@
                     utterance.lang = langMap[currentLang] || 'es-ES';
                     utterance.rate = 0.9;
                     utterance.pitch = 1;
+                    utterance.volume = 1;
                     
                     window.speechSynthesis.speak(utterance);
                 });
+            } else {
+                alert('Tu navegador no soporta Web Speech API');
             }
         });
 
         pauseBtn.addEventListener('click', () => {
             if ('speechSynthesis' in window) {
-                window.speechSynthesis.pause();
+                if (window.speechSynthesis.speaking) {
+                    window.speechSynthesis.pause();
+                }
             }
         });
 
         stopBtn.addEventListener('click', () => {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
+            }
+        });
+
+        // Close AI panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!aiPanel.contains(e.target) && !aiBtn.contains(e.target)) {
+                aiPanel.classList.remove('active');
             }
         });
 
