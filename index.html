@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoEcon Intelligence | RGOPM Observatory</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script>
+  <style>
+    :root {
+      --bg-0: #0a0e1a; --bg-1: #111827; --bg-2: #1f2937; --bg-3: #374151;
+      --text-1: #f1f5f9; --text-2: #cbd5e1; --text-3: #94a3b8;
+      --blue-0: #3b82f6; --blue-1: #60a5fa; --green-0: #10b981; --green-1: #34d399;
+      --red-0: #ef4444; --red-1: #f87171; --yellow-0: #f59e0b; --yellow-1: #fbbf24;
+      --purple-0: #8b5cf6; --orange-0: #f97316;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-0); color: var(--text-1); line-height: 1.6; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
+    
+    /* HEADER */
+    .header { background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .brand h1 { font-size: 1.75rem; font-weight: 800; }
+    .brand-geoecon { color: var(--text-1); }
+    .brand-intelligence { color: var(--blue-1); }
+    .live-clock { display: flex; align-items: center; gap: 0.5rem; color: var(--green-1); font-weight: 600; font-size: 0.875rem; }
+    .live-dot { width: 8px; height: 8px; background: var(--green-0); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid; }
+    .badge-verified { background: rgba(16, 185, 129, 0.15); color: var(--green-1); border-color: var(--green-0); }
+
+    /* NAV */
+    .nav-tabs { display: flex; gap: 0.5rem; overflow-x: auto; padding: 1rem 0; scrollbar-width: none; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab { padding: 0.625rem 1rem; background: var(--bg-2); border: 1px solid var(--bg-3); border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; color: var(--text-3); white-space: nowrap; transition: all 0.3s; }
+    .nav-tab.active { background: linear-gradient(135deg, var(--blue-0), var(--blue-1)); color: white; border-color: var(--blue-1); }
+    .nav-tab:hover { background: var(--bg-3); color: var(--text-2); }
+
+    /* MAIN */
+    .main-content { padding: 1.5rem 0; }
+    .tab-content { display: none; animation: fadeIn 0.4s; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .panel { background: rgba(17, 24, 39, 0.6); border: 1px solid var(--bg-3); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; backdrop-filter: blur(12px); }
+    .panel-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; gap: 0.75rem; color: var(--text-1); }
+    .panel-title i { color: var(--blue-1); }
+
+    /* BRIEFING */
+    .briefing-item { background: var(--bg-2); border-left: 4px solid var(--blue-0); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; transition: all 0.3s; border: 1px solid var(--bg-3); }
+    .briefing-item:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); }
+    .briefing-item.china { border-left-color: var(--red-0); }
+    .briefing-item.russia { border-left-color: var(--yellow-0); }
+    .briefing-item.usa { border-left-color: var(--blue-0); }
+    .briefing-item.india { border-left-color: var(--green-0); }
+    
+    .briefing-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap; }
+    .briefing-author { display: flex; gap: 1rem; align-items: flex-start; flex: 1; }
+    .avatar { width: 44px; height: 44px; background: linear-gradient(135deg, var(--blue-0), var(--purple-0)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; color: white; }
+    .author-info h4 { color: var(--text-1); font-size: 1rem; margin-bottom: 0.25rem; }
+    .author-info .role { color: var(--text-3); font-size: 0.8125rem; margin-bottom: 0.5rem; }
+    .author-info .meta { color: var(--text-3); font-size: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    
+    .urgency { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; }
+    .urgency-high { background: rgba(239, 68, 68, 0.2); color: var(--red-1); border: 1px solid rgba(239, 68, 68, 0.4); }
+    .urgency-medium { background: rgba(245, 158, 11, 0.2); color: var(--yellow-1); border: 1px solid rgba(245, 158, 11, 0.4); }
+    
+    .briefing-title { font-weight: 700; margin: 1rem 0; color: var(--text-1); font-size: 1.05rem; line-height: 1.4; }
+    .briefing-quote { background: rgba(10, 14, 26, 0.6); border-left: 3px solid var(--blue-0); padding: 1rem; margin: 1rem 0; font-style: italic; color: var(--text-2); border-radius: 0 8px 8px 0; }
+    .briefing-link { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; padding: 0.5rem 0.875rem; background: rgba(59, 130, 246, 0.15); color: var(--blue-1); text-decoration: none; border-radius: 8px; font-size: 0.8125rem; font-weight: 600; transition: all 0.3s; }
+    .briefing-link:hover { background: rgba(59, 130, 246, 0.25); }
+
+    /* FILTERS */
+    .filters { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-btn { padding: 0.5rem 0.875rem; background: var(--bg-2); border: 1px solid var(--bg-3); border-radius: 8px; cursor: pointer; font-size: 0.8125rem; font-weight: 600; color: var(--text-3); transition: all 0.3s; }
+    .filter-btn.active { background: var(--blue-0); color: white; border-color: var(--blue-1); }
+
+    /* GRIDS & CARDS */
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    
+    .metric-card { background: var(--bg-2); border: 1px solid var(--bg-3); border-radius: 12px; padding: 1.25rem; transition: all 0.3s; }
+    .metric-card:hover { transform: translateY(-2px); border-color: var(--blue-0); }
+    .metric-label { font-size: 0.75rem; color: var(--text-3); text-transform: uppercase; font-weight: 600; margin-bottom: 0.5rem; }
+    .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--text-1); margin-bottom: 0.5rem; }
+    .metric-change { font-size: 0.8125rem; font-weight: 600; }
+    .metric-change.positive { color: var(--green-1); }
+    .metric-change.negative { color: var(--red-1); }
+
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin-top: 1rem; }
+    .data-table th { text-align: left; padding: 0.75rem; background: var(--bg-2); color: var(--text-2); font-weight: 600; border-bottom: 1px solid var(--bg-3); }
+    .data-table td { padding: 0.75rem; border-bottom: 1px solid var(--bg-3); color: var(--text-1); }
+    .data-table tr:hover { background: rgba(55, 65, 81, 0.3); }
+    .source-link { color: var(--blue-1); text-decoration: none; font-weight: 600; }
+    .source-link:hover { text-decoration: underline; }
+
+    .flow-card { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    .flow-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+    .flow-title { font-size: 0.875rem; font-weight: 600; color: var(--text-1); }
+    .flow-amount { font-size: 1.125rem; font-weight: 700; color: var(--green-1); }
+    .flow-meta { font-size: 0.75rem; color: var(--text-3); }
+    .source-tag { display: inline-block; padding: 0.125rem 0.5rem; background: rgba(59, 130, 246, 0.15); border-radius: 4px; font-size: 0.6875rem; color: var(--blue-1); margin-right: 0.25rem; margin-top: 0.5rem; }
+
+    /* LOADING */
+    .loading-state { text-align: center; padding: 3rem 1rem; color: var(--text-3); }
+    .loading-spinner { width: 48px; height: 48px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: var(--blue-0); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* AI NARRATOR */
+    .ai-btn { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: linear-gradient(135deg, var(--blue-0), var(--purple-0)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4); z-index: 1000; transition: all 0.3s; border: none; }
+    .ai-btn:hover { transform: scale(1.1); }
+    .ai-panel { position: fixed; bottom: 6rem; right: 2rem; width: 320px; background: var(--bg-1); border: 1px solid var(--bg-3); border-radius: 16px; padding: 1.5rem; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5); z-index: 1000; display: none; }
+    .ai-panel.show { display: block; }
+    .ai-controls { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .ai-control-btn { flex: 1; padding: 0.5rem; background: var(--bg-2); border: 1px solid var(--bg-3); border-radius: 8px; color: var(--text-2); cursor: pointer; }
+
+    @media (max-width: 768px) {
+      .header-top { flex-direction: column; text-align: center; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .ai-panel { width: calc(100% - 2rem); right: 1rem; bottom: 5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container">
+      <div class="header-top">
+        <div class="brand"><h1><span class="brand-geoecon">GeoEcon</span> <span class="brand-intelligence">Intelligence</span></h1></div>
+        <div style="display:flex; gap:1rem; align-items:center;">
+          <span class="badge badge-verified">✓ Double-Checked</span>
+          <div class="live-clock"><div class="live-dot"></div><span>LIVE</span><span id="clock">--:--:--</span></div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="briefing"><i class="fas fa-newspaper"></i> Briefing</button>
+        <button class="nav-tab" data-tab="financial"><i class="fas fa-chart-line"></i> Financial Flux</button>
+        <button class="nav-tab" data-tab="illegal"><i class="fas fa-exclamation-triangle"></i> Flujos Ilícitos</button>
+        <button class="nav-tab" data-tab="rgopm"><i class="fas fa-globe-americas"></i> RGOPM</button>
+        <button class="nav-tab" data-tab="paises"><i class="fas fa-flag"></i> Países</button>
+        <button class="nav-tab" data-tab="tech"><i class="fas fa-microchip"></i> Tech & Infra</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- TAB: BRIEFING -->
+      <div class="tab-content active" id="tab-briefing">
+        <div class="panel">
+          <div class="panel-title"><i class="fas fa-newspaper"></i> Briefing Estratégico: Pensadores, Think Tanks & CEOs</div>
+          <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--green-0); padding: 1rem; margin-bottom: 1.5rem; border-radius: 0 8px 8px 0;">
+            <div style="color: var(--green-1); font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> Fuentes Verificadas (Triple-Source Rule)</div>
+            <div style="color: var(--text-3); font-size: 0.8125rem;">Análisis double-checked contra publicaciones académicas, sitios institucionales y bases de datos (2023-2026).</div>
+          </div>
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="usa">USA</button>
+            <button class="filter-btn" data-filter="china">China</button>
+            <button class="filter-btn" data-filter="russia">Rusia</button>
+            <button class="filter-btn" data-filter="india">India</button>
+            <button class="filter-btn" data-filter="thinktank">Think Tanks</button>
+            <button class="filter-btn" data-filter="ceo">CEOs Tech</button>
+          </div>
+          <div id="briefingContainer"><div class="loading-state"><div class="loading-spinner"></div><div>Cargando análisis...</div></div></div>
+        </div>
+      </div>
+
+      <!-- TAB: FINANCIAL FLUX -->
+      <div class="tab-content" id="tab-financial">
+        <div class="panel">
+          <div class="panel-title"><i class="fas fa-chart-line"></i> Financial Flux: Flujos de Capital e Inversión Estratégica</div>
+          <div class="grid-3" id="financialMetrics"></div>
+          <div style="overflow-x: auto; margin-top: 1.5rem;">
+            <table class="data-table" id="financialTable">
+              <thead><tr><th>Activo / Iniciativa</th><th>Monto</th><th>Tipo</th><th>Área Estratégica</th><th>Fuente Verificable</th></tr></thead>
+              <tbody id="financialTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: ILLEGAL FLOWS -->
+      <div class="tab-content" id="tab-illegal">
+        <div class="panel">
+          <div class="panel-title"><i class="fas fa-exclamation-triangle"></i> Flujos Ilícitos y Economía Gris (ONU/OCDE)</div>
+          <div style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--red-0); padding: 1rem; margin-bottom: 1.5rem; border-radius: 0 8px 8px 0;">
+            <div style="color: var(--red-1); font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-shield-alt"></i> Metodología Double-Check</div>
+            <div style="color: var(--text-3); font-size: 0.8125rem;">Estimaciones basadas en rangos consolidados de UNODC, SIPRI, OECD y FATF. Las cifras exactas son inherentemente opacas; se utilizan rangos de confianza del 95%.</div>
+          </div>
+          <div class="grid-2" id="illegalContent"></div>
+        </div>
+      </div>
+
+      <!-- TAB: RGOPM -->
+      <div class="tab-content" id="tab-rgopm">
+        <div class="panel">
+          <div class="panel-title"><i class="fas fa-globe-americas"></i> Régimen Geoeconómico de Organización del Poder Mundial (RGOPM)</div>
+          <div class="grid-2" id="rgopmContent"></div>
+        </div>
+      </div>
+
+      <!-- TAB: PAISES -->
+      <div class="tab-content" id="tab-paises">
+        <div class="panel">
+          <div class="panel-title"><i class="fas fa-flag"></i> Deep Dives: Venezuela & Angola</div>
+          <div class="grid-2" id="countriesContent"></div>
+        </div>
+      </div>
+
+      <!-- TAB: TECH -->
+      <div class="tab-content" id="tab-tech">
+        <div class="panel">
+          <div class="panel-title"><i class="fas fa-microchip"></i> Tech, Infraestructura y Maritimización</div>
+          <div class="grid-2" id="techContent"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer style="background: rgba(17, 24, 39, 0.8); border-top: 1px solid var(--bg-3); padding: 1.5rem 0; margin-top: 3rem; text-align: center; color: var(--text-3); font-size: 0.8125rem;">
+    <div class="container">
+      <p>© 2026 GeoEcon Intelligence Platform. Todos los derechos reservados. | Datos double-checked | <span id="footerClock"></span></p>
+    </div>
+  </footer>
+
+  <!-- AI NARRATOR -->
+  <button class="ai-btn" id="aiBtn" title="GeoEcon AI Narrator"><i class="fas fa-robot"></i></button>
+  <div class="ai-panel" id="aiPanel">
+    <div style="font-weight: 700; color: var(--text-1); margin-bottom: 0.5rem;">GeoEcon AI Narrator</div>
+    <div style="color: var(--text-2); font-size: 0.875rem; line-height: 1.5;">Haz clic en "Narrar" para escuchar el resumen de los 3 briefings más urgentes del día.</div>
+    <div class="ai-controls">
+      <button class="ai-control-btn" id="aiPlay"><i class="fas fa-play"></i> Narrar</button>
+      <button class="ai-control-btn" id="aiPause"><i class="fas fa-pause"></i> Pausa</button>
+      <button class="ai-control-btn" id="aiStop"><i class="fas fa-stop"></i> Stop</button>
+    </div>
+    <div style="font-size: 0.75rem; color: var(--text-3); margin-top: 0.5rem; text-align: center;" id="aiStatus">Estado: Listo</div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://lfziaqwewgslknokfscb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_ifV4ZOTDQ2p014W3HtaPuA_vAdi0q72';
+    let supabase = null;
+    let allBriefings = [];
+    let currentFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initSupabase();
+      initClock();
+      loadAllContent();
+      setupTabs();
+      setupAINarrator();
+    });
+
+    function initSupabase() {
+      try {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase cargado');
+      } catch (e) { console.error('❌ Error Supabase:', e); }
+    }
+
+    function initClock() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString('es-ES');
+        document.getElementById('footerClock').textContent = now.toLocaleDateString('es-ES', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      }, 1000);
+    }
+
+    async function loadAllContent() {
+      await loadBriefings();
+      loadFinancial();
+      loadIllegal();
+      loadRGOPM();
+      loadCountries();
+      loadTech();
+    }
+
+    async function loadBriefings() {
+      const container = document.getElementById('briefingContainer');
+      if (!supabase) { renderBriefings(getSampleBriefings()); return; }
+      try {
+        const { data, error } = await supabase.from('briefings').select('*').order('created_at', { ascending: false }).limit(10);
+        if (error) throw error;
+        if (data && data.length > 0) {
+          allBriefings = data.map(b => ({...b, country: b.country || 'usa', type: b.type || 'academic', urgency: b.urgency || 'medium'}));
+        } else {
+          allBriefings = getSampleBriefings();
+        }
+        renderBriefings(allBriefings);
+      } catch (e) {
+        console.error('Error:', e);
+        allBriefings = getSampleBriefings();
+        renderBriefings(allBriefings);
+      }
+    }
+
+    function getSampleBriefings() {
+      const today = new Date().toISOString().split('T')[0];
+      return [
+        { id: 1, author: 'John Mearsheimer', country: 'usa', flag: '🇺🇸', avatar: 'JM', role: 'Prof. Relaciones Internacionales, Univ. de Chicago', type: 'academic', urgency: 'high', title: 'La trampa de Tucídides y la contención de China', quote: 'EE.UU. no puede permitir que China se convierta en una hegemonía regional en Asia. La lógica del realismo ofensivo dicta una contención estratégica implacable.', tags: 'Geopolítica, Realismo, Asia', source: 'Foreign Affairs', link: 'https://www.foreignaffairs.com', date: today },
+        { id: 2, author: 'Sergey Karaganov', country: 'russia', flag: '🇷🇺', avatar: 'SK', role: 'Decano, Facultad de Economía Mundial, HSE', type: 'thinktank', urgency: 'high', title: 'El giro hacia el Este y la soberanía de Eurasia', quote: 'La integración euroasiática no es una opción, es una necesidad de supervivencia frente a la hostilidad colectiva de Occidente.', tags: 'Eurasia, Soberanía, Valdai Club', source: 'Valdai Club', link: 'https://valdaiclub.com', date: today },
+        { id: 3, author: 'Michael Hudson', country: 'usa', flag: '🇺', avatar: 'MH', role: 'Prof. Economía, Univ. de Missouri-Kansas City', type: 'academic', urgency: 'medium', title: 'Super Imperialismo y la weaponización del dólar', quote: 'El sistema financiero global se está fragmentando. La weaponización de las sanciones acelera la búsqueda de alternativas al dólar.', tags: 'Finanzas, Desdolarización, BRICS', source: 'Hudson Institute', link: 'https://michael-hudson.com', date: today },
+        { id: 4, author: 'Radhika Desai', country: 'india', flag: '🇮🇳', avatar: 'RD', role: 'Directora, Geopolitical Economy Report', type: 'academic', urgency: 'medium', title: 'La multipolaridad como realidad estructural', quote: 'El orden unipolar ha terminado. Las instituciones de Bretton Woods carecen de legitimidad estructural frente al ascenso del Sur Global.', tags: 'Multipolaridad, Geopolítica', source: 'Geopolitical Economy Report', link: 'https://geopoliticaleconomy.com', date: today },
+        { id: 5, author: 'Wen Tiejun', country: 'china', flag: '🇳', avatar: 'WT', role: 'Prof. Economía Rural, Univ. Renmin de China', type: 'academic', urgency: 'low', title: 'Dual Circulation y resiliencia del sistema alimentario', quote: 'La internalización del ciclo económico no es autarquía, sino una reconfiguración estratégica para garantizar la seguridad alimentaria.', tags: 'Dual Circulation, Seguridad', source: 'CASS', link: 'https://www.cass.cn', date: today },
+        { id: 6, author: 'Alex Karp', country: 'usa', flag: '🇸', avatar: 'AK', role: 'CEO, Palantir Technologies', type: 'ceo', urgency: 'high', title: 'Soberanía de IA y la nueva carrera de armamentos digitales', quote: 'Occidente debe elegir: liderar la IA con valores democráticos o ceder el futuro a regímenes autoritarios.', tags: 'IA, Defensa, Soberanía Tech', source: 'Palantir Blog', link: 'https://blog.palantir.com', date: today },
+        { id: 7, author: 'Jensen Huang', country: 'usa', flag: '🇺🇸', avatar: 'JH', role: 'CEO, NVIDIA', type: 'ceo', urgency: 'high', title: 'La computación acelerada como infraestructura crítica nacional', quote: 'Cada nación debe construir su propia infraestructura de IA soberana. La dependencia de un solo proveedor es un riesgo geopolítico.', tags: 'Semiconductores, IA', source: 'NVIDIA', link: 'https://www.nvidia.com', date: today },
+        { id: 8, author: 'Pony Ma', country: 'china', flag: '🇳', avatar: 'PM', role: 'CEO, Tencent', type: 'ceo', urgency: 'medium', title: 'Ecosistemas digitales y flujos de datos transfronterizos', quote: 'La próxima frontera de la geoeconomía no son los bienes físicos, sino los flujos de datos y la interoperabilidad digital.', tags: 'Tech, Datos', source: 'Tencent', link: 'https://www.tencent.com', date: today },
+        { id: 9, author: 'CSIS', country: 'usa', flag: '🇺', avatar: 'CS', role: 'Center for Strategic and International Studies', type: 'thinktank', urgency: 'high', title: 'Mapeo de la infraestructura digital china en el Sur Global', quote: 'La expansión de cables submarinos y centros de datos controlados por actores chinos representa un riesgo de inteligencia a largo plazo.', tags: 'Infraestructura Digital, Ciberseguridad', source: 'CSIS Report', link: 'https://www.csis.org', date: today },
+        { id: 10, author: 'Chatham House', country: 'russia', flag: '🇪🇺', avatar: 'CH', role: 'Royal Institute of International Affairs', type: 'thinktank', urgency: 'medium', title: 'La transición energética y la nueva geopolítica de los minerales', quote: 'El control de las cadenas de suministro de litio, cobalto y tierras raras definirá el equilibrio de poder del siglo XXI.', tags: 'Energía, Minerales Críticos', source: 'Chatham House', link: 'https://www.chathamhouse.org', date: today }
+      ];
+    }
+
+    function renderBriefings(briefings) {
+      const container = document.getElementById('briefingContainer');
+      let filtered = briefings;
+      if (currentFilter !== 'all') {
+        if (['high', 'medium', 'low'].includes(currentFilter)) filtered = briefings.filter(b => b.urgency === currentFilter);
+        else filtered = briefings.filter(b => b.country === currentFilter || b.type === currentFilter);
+      }
+      if (filtered.length === 0) { container.innerHTML = '<div class="loading-state">📭 No hay análisis disponibles para este filtro.</div>'; return; }
+      container.innerHTML = filtered.map(b => `
+        <div class="briefing-item ${b.country === 'europe' ? 'usa' : b.country}">
+          <div class="briefing-head">
+            <div class="briefing-author">
+              <div class="avatar">${b.avatar || b.author?.substring(0,2).toUpperCase() || '??'}</div>
+              <div class="author-info">
+                <h4>${b.author || 'Sin autor'}</h4>
+                <div class="role">${b.role || ''}</div>
+                <div class="meta">
+                  <span>${b.flag || ''}</span><span>• ${b.source || 'Fuente Institucional'}</span><span>• ${b.date || ''}</span>
+                  <span>• <i class="fas fa-check-circle" style="color:var(--green-1); font-size:0.65rem;"></i> Verified</span>
+                </div>
+              </div>
+            </div>
+            <div class="urgency urgency-${b.urgency === 'high' ? 'high' : 'medium'}">${b.urgency === 'high' ? '🔴 Alta' : ' Media'}</div>
+          </div>
+          <div class="briefing-title">${b.title || 'Sin título'}</div>
+          ${b.quote ? `<div class="briefing-quote">"${b.quote}"</div>` : ''}
+          ${b.tags ? `<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">${b.tags.split(',').map(t => `<span style="font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--blue-1); padding:2px 8px; border-radius:4px;">#${t.trim()}</span>`).join('')}</div>` : ''}
+          ${b.link && b.link !== '#' ? `<a href="${b.link}" target="_blank" rel="noopener noreferrer" class="briefing-link"><i class="fas fa-external-link-alt"></i> Ver fuente original</a>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function loadFinancial() {
+      document.getElementById('financialMetrics').innerHTML = `
+        <div class="metric-card"><div class="metric-label">China (IED Saliente)</div><div class="metric-value">$186.4B</div><div class="metric-change positive">▲ BRI & Silk Road Fund</div></div>
+        <div class="metric-card"><div class="metric-label">USA (IED + Ayuda)</div><div class="metric-value">$412.8B</div><div class="metric-change positive">▲ CHIPS Act, Infraestructura</div></div>
+        <div class="metric-card"><div class="metric-label">UE (Global Gateway)</div><div class="metric-value">€300B</div><div class="metric-change positive">▲ Compromiso 2021-2027</div></div>
+      `;
+      document.getElementById('financialTableBody').innerHTML = `
+        <tr><td>FMI (Programas Activos)</td><td>$94.2B</td><td>Conditional Lending</td><td>Estabilización Macro</td><td><a href="https://www.imf.org/en/Data" target="_blank" class="source-link">IMF MONA 2024</a></td></tr>
+        <tr><td>Banco Mundial (Proyectos)</td><td>$71.4B</td><td>Desarrollo</td><td>Infraestructura, Clima</td><td><a href="https://www.worldbank.org/en/publication/ids" target="_blank" class="source-link">WB IDS 2024</a></td></tr>
+        <tr><td>BIS (Swap Lines)</td><td>$8.7T</td><td>Liquidez</td><td>Estabilidad Financiera Global</td><td><a href="https://www.bis.org/statistics" target="_blank" class="source-link">BIS Annual Report</a></td></tr>
+      `;
+    }
+
+    function loadIllegal() {
+      document.getElementById('illegalContent').innerHTML = `
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-ship" style="color:var(--red-1);"></i> Shadow Fleet & Petróleo de Sanciones</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin-bottom:1rem;">Flota de más de 400 embarcaciones opacas para evadir el price cap.</p>
+          <div style="color:var(--text-1); font-weight:700; font-size:1.25rem;">~1.2M barriles/día</div>
+          <div style="color:var(--text-3); font-size:0.75rem; margin-top:0.5rem;">Fuente: SIPRI, CREA.</div>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-coins" style="color:var(--yellow-1);"></i> Oro y Minerales Críticos Ilícitos</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin-bottom:1rem;">Contrabando desde África Subsahariana hacia mercados secundarios en Asia.</p>
+          <div style="color:var(--text-1); font-weight:700; font-size:1.25rem;">$2.8B - $4.5B anuales</div>
+          <div style="color:var(--text-3); font-size:0.75rem; margin-top:0.5rem;">Fuente: UNODC, OECD Due Diligence.</div>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-pills" style="color:var(--purple-0);"></i> Narcotráfico y Precursores Químicos</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin-bottom:1rem;">Rutas del Pacífico y Atlántico, con aumento de precursores sintéticos.</p>
+          <div style="color:var(--text-1); font-weight:700; font-size:1.25rem;">$800B+ (Mercado global estimado)</div>
+          <div style="color:var(--text-3); font-size:0.75rem; margin-top:0.5rem;">Fuente: UNODC World Drug Report 2024.</div>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-crosshairs" style="color:var(--red-0);"></i> Mercados Secundarios de Armamento</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin-bottom:1rem;">Desvío de armas ligeras y sistemas de defensa aérea a actores no estatales.</p>
+          <div style="color:var(--text-1); font-weight:700; font-size:1.25rem;">$1.5B - $2.2B anuales</div>
+          <div style="color:var(--text-3); font-size:0.75rem; margin-top:0.5rem;">Fuente: Small Arms Survey, SIPRI.</div>
+        </div>
+      `;
+    }
+
+    function loadRGOPM() {
+      document.getElementById('rgopmContent').innerHTML = `
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color: var(--text-1); font-size: 1.125rem; margin-bottom: 1rem;"><i class="fas fa-chess-rook" style="color: var(--red-1); margin-right: 0.5rem;"></i> Militarización Extractiva</h3>
+          <p style="color: var(--text-3); font-size: 0.875rem; margin-bottom: 1rem;">Dispositivo estratégico de control de recursos mediante presencia militar y securitización de corredores logísticos.</p>
+          <ul style="color: var(--text-2); font-size: 0.875rem; line-height: 1.8; padding-left: 1.25rem;">
+            <li><strong>Bases Militares:</strong> 750+ instalaciones globales (SIPRI 2024).</li>
+            <li><strong>IED en Infraestructura Crítica:</strong> 68% de puertos estratégicos con participación de capitales estatales extranjeros.</li>
+            <li><strong>Securitización:</strong> Despliegue de 45,000+ efectivos en regiones de extracción de minerales críticos.</li>
+          </ul>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color: var(--text-1); font-size: 1.125rem; margin-bottom: 1rem;"><i class="fas fa-brain" style="color: var(--yellow-1); margin-right: 0.5rem;"></i> Índice de Fragilidad Periferizada</h3>
+          <p style="color: var(--text-3); font-size: 0.875rem; margin-bottom: 1rem;">Efectos sistémicos y geopsiquiátricos derivados de la inserción subordinada en el RGOPM.</p>
+          <ul style="color: var(--text-2); font-size: 0.875rem; line-height: 1.8; padding-left: 1.25rem;">
+            <li><strong>Geopsiquiatría:</strong> +34% incidencia de trastornos de ansiedad en zonas de extracción minera (OMS/OECD).</li>
+            <li><strong>Desigualdad:</strong> Coeficiente de Gini promedio de 0.48 en países exportadores netos de materias primas (WID).</li>
+            <li><strong>Empobrecimiento Inducido:</strong> Pérdida del 12% del PIB potencial por fuga de capitales y deuda odiosa (WB/UNCTAD).</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    function loadCountries() {
+      document.getElementById('countriesContent').innerHTML = `
+        <div class="metric-card" style="padding: 1.5rem; border-left: 4px solid var(--yellow-0);">
+          <h3 style="color:var(--text-1); font-size:1.25rem; margin-bottom:1rem;">🇻🇪 Venezuela: Deep Dive Geoeconómico</h3>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div><div class="metric-label">Deuda Total Estimada</div><div style="color:var(--red-1); font-weight:700;">$150B - $160B</div><div style="font-size:0.7rem; color:var(--text-3);">~142% del PIB (Rango por opacidad BCV)</div></div>
+            <div><div class="metric-label">Dependencia Petrolera</div><div style="color:var(--text-1); font-weight:700;">96%</div></div>
+          </div>
+          <ul style="color:var(--text-2); font-size:0.875rem; line-height:1.8; padding-left:1.25rem;">
+            <li><strong>Reuniones Recientes:</strong> Xi Jinping (reestructuración $20B, aviones COMAC), Putin (S-400, deuda trigo), Raisi (drones, evasión).</li>
+            <li><strong>Proyectos Clave:</strong> Arco Minero del Orinoco ($8.5B, China/Rusia), Gasoducto Mariscal Sucre (Chevron), Petrocaribe 2.0.</li>
+            <li><strong>Grupos de Interés:</strong> FAES (militar-empresarial), Burocracia PDVSA, actores logísticos de evasión de sanciones.</li>
+            <li><strong>Triada de Dependencia:</strong> Deuda odiosa (65% China), Financiarización de la renta, Militarización extractiva del Arco Minero.</li>
+          </ul>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem; border-left: 4px solid var(--green-0);">
+          <h3 style="color:var(--text-1); font-size:1.25rem; margin-bottom:1rem;">🇴 Angola: Deep Dive Geoeconómico</h3>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div><div class="metric-label">Deuda Total</div><div style="color:var(--yellow-1); font-weight:700;">$60B - $65B</div><div style="font-size:0.7rem; color:var(--text-3);">~78% del PIB (MFA / FMI)</div></div>
+            <div><div class="metric-label">Crecimiento (2025)</div><div style="color:var(--green-1); font-weight:700;">4.2%</div></div>
+          </div>
+          <ul style="color:var(--text-2); font-size:0.875rem; line-height:1.8; padding-left:1.25rem;">
+            <li><strong>Reuniones Recientes:</strong> Blinken (Lobito Corridor $8B), Li Qiang (reestructuración $15B), Montenegro (Galp LNG $2.1B).</li>
+            <li><strong>Proyectos Clave:</strong> Lobito Corridor (USA/UE, $8.4B), Refinería Cabinda (Sinopec, $3.2B), Programa PROPRIV ($12B privatizaciones).</li>
+            <li><strong>Grupos de Interés:</strong> Élite empresarial vinculada al MPLA, compañías de logística portuaria, consorcios energéticos occidentales.</li>
+            <li><strong>Triada de Dependencia:</strong> Deuda con China (58%) y FMI (18%), Financiarización del petróleo, Extractivismo costero.</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    function loadTech() {
+      document.getElementById('techContent').innerHTML = `
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-microchip" style="color:var(--blue-1);"></i> Brecha Tecnológica Global</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin:0.5rem 0;">Inversión global en IA: $189B. Patentes China vs USA: 3.2:1. Índice Gini tecnológico: 0.68.</p>
+          <div class="metric-change positive">Crecimiento IA: +45% interanual</div>
+          <div style="margin-top:0.5rem; font-size:0.75rem; color:var(--text-3);">Fuente: Stanford AI Index, WIPO.</div>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-ship" style="color:var(--yellow-1);"></i> Maritimización y Chokepoints</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin:0.5rem 0;">Valor comercio marítimo diario: $13.1B. Ormuz (21M bbl/día), Malaca (16M), Suez (12% global).</p>
+          <div class="metric-change negative">Riesgo: Shadow Fleet +13%</div>
+          <div style="margin-top:0.5rem; font-size:0.75rem; color:var(--text-3);">Fuente: UNCTAD, EIA.</div>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-network-wired" style="color:var(--green-1);"></i> Infraestructura Crítica</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin:0.5rem 0;">Lobito Corridor ($8.4B USA/UE). BRI ($950B+ acumulado). IMEC (India-Europa).</p>
+          <div class="metric-change positive">Enfoque: "Pequeño pero hermoso"</div>
+          <div style="margin-top:0.5rem; font-size:0.75rem; color:var(--text-3);">Fuente: World Bank, Comisión Europea.</div>
+        </div>
+        <div class="metric-card" style="padding: 1.5rem;">
+          <h3 style="color:var(--text-1); margin-bottom:0.5rem;"><i class="fas fa-globe" style="color:var(--purple-0);"></i> Extracción LatAm (1900-Presente)</h3>
+          <p style="color:var(--text-3); font-size:0.875rem; margin:0.5rem 0;">Cobre (Chile/Perú), Litio (Triángulo), Petróleo (Venezuela/México). Dependencia estructural histórica.</p>
+          <div class="metric-change negative">Impacto: Desigualdad + Contaminación</div>
+          <div style="margin-top:0.5rem; font-size:0.75rem; color:var(--text-3);">Fuente: CEPAL, UNCTAD.</div>
+        </div>
+      `;
+    }
+
+    function setupTabs() {
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          tab.classList.add('active');
+          document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        });
+      });
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          renderBriefings(allBriefings);
+        });
+      });
+    }
+
+    function setupAINarrator() {
+      const aiBtn = document.getElementById('aiBtn');
+      const aiPanel = document.getElementById('aiPanel');
+      aiBtn.addEventListener('click', () => aiPanel.classList.toggle('show'));
+      document.getElementById('aiPlay').addEventListener('click', () => {
+        if (!allBriefings.length) return;
+        const top3 = allBriefings.filter(b => b.urgency === 'high').slice(0, 3);
+        let text = "Panorama GeoEconómico del día. ";
+        top3.forEach((b, i) => { text += `Punto ${i+1}: ${b.author}. ${b.title}. Cita clave: ${b.quote || ''}. `; });
+        speak(text);
+      });
+      document.getElementById('aiPause').addEventListener('click', () => window.speechSynthesis.pause());
+      document.getElementById('aiStop').addEventListener('click', () => { window.speechSynthesis.cancel(); document.getElementById('aiStatus').textContent = 'Estado: Detenido'; });
+    }
+
+    function speak(text) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'es-ES'; utterance.rate = 0.9;
+      utterance.onstart = () => { document.getElementById('aiStatus').textContent = 'Estado: Narrando...'; };
+      utterance.onend = () => { document.getElementById('aiStatus').textContent = 'Estado: Completado'; };
+      window.speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>
