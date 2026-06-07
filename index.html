@@ -11,104 +11,107 @@
       --bg-0: #0a0e1a; --bg-1: #111827; --bg-2: #1f2937; --bg-3: #374151;
       --text-1: #f1f5f9; --text-2: #cbd5e1; --text-3: #94a3b8;
       --blue-0: #3b82f6; --blue-1: #60a5fa; --green-0: #10b981; --green-1: #34d399;
-      --red-0: #ef4444; --red-1: #f87171; --purple-0: #8b5cf6; --yellow-0: #f59e0b; --yellow-1: #fbbf24;
-      --spacing-xs: 0.25rem; --spacing-sm: 0.5rem; --spacing-md: 1rem; --spacing-lg: 1.5rem; --spacing-xl: 2rem;
+      --red-0: #ef4444; --red-1: #f87171; --yellow-0: #f59e0b; --yellow-1: #fbbf24;
+      --purple-0: #8b5cf6;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, var(--bg-0) 0%, var(--bg-1) 100%); color: var(--text-1); line-height: 1.6; min-height: 100vh; }
-    .container { max-width: 1400px; margin: 0 auto; padding: 0 var(--spacing-md); }
-    
-    .header { background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding: var(--spacing-md) 0; position: sticky; top: 0; z-index: 1000; }
-    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md); flex-wrap: wrap; gap: var(--spacing-md); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 1rem; }
+
+    /* HEADER */
+    .header { background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(59, 130, 246, 0.3); padding: 1rem 0; position: sticky; top: 0; z-index: 1000; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
     .brand h1 { font-size: clamp(1.25rem, 4vw, 1.75rem); font-weight: 800; }
     .brand-geoecon { color: var(--text-1); }
     .brand-intelligence { color: var(--blue-1); }
-    .live-clock { display: flex; align-items: center; gap: var(--spacing-sm); font-size: 0.875rem; color: var(--green-1); font-weight: 600; }
-    .live-dot { width: 8px; height: 8px; background: var(--green-0); border-radius: 50%; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+    .header-controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .lang-selector { background: var(--bg-2); border: 1px solid var(--bg-3); border-radius: 8px; padding: 0.5rem; color: var(--text-1); font-size: 0.875rem; cursor: pointer; }
     .badge { padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; border: 1px solid; }
     .badge-verified { background: rgba(16, 185, 129, 0.15); color: var(--green-1); border-color: var(--green-0); }
-    
-    .nav-tabs { display: flex; gap: var(--spacing-sm); overflow-x: auto; scrollbar-width: none; }
+    .live-clock { display: flex; align-items: center; gap: 0.5rem; color: var(--green-1); font-weight: 600; font-size: 0.875rem; }
+    .live-dot { width: 8px; height: 8px; background: var(--green-0); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    /* NAV */
+    .nav-tabs { display: flex; gap: 0.5rem; overflow-x: auto; scrollbar-width: none; }
     .nav-tabs::-webkit-scrollbar { display: none; }
-    .nav-tab { padding: 0.625rem 1rem; background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(55, 65, 81, 0.5); border-radius: 8px; cursor: pointer; font-size: 0.8125rem; font-weight: 600; white-space: nowrap; color: var(--text-3); transition: all 0.3s; }
+    .nav-tab { padding: 0.625rem 1rem; background: rgba(31, 41, 55, 0.6); border: 1px solid var(--bg-3); border-radius: 8px; cursor: pointer; font-size: 0.8125rem; font-weight: 600; white-space: nowrap; color: var(--text-3); transition: all 0.3s; }
     .nav-tab.active { background: linear-gradient(135deg, var(--blue-0), var(--blue-1)); color: white; }
-    
-    .main-content { padding: var(--spacing-lg) 0; }
-    .tab-content { display: none; animation: fadeIn 0.5s; }
+
+    /* MAIN */
+    .main-content { padding: 1.5rem 0; }
+    .tab-content { display: none; }
     .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .panel { background: rgba(17, 24, 39, 0.6); border: 1px solid var(--bg-3); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .panel-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid rgba(59, 130, 246, 0.3); color: var(--text-1); }
+
+    /* BRIEFING CINTILLO */
+    .briefing-ribbon { background: rgba(31, 41, 55, 0.6); border-left: 4px solid var(--blue-0); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; transition: all 0.3s; }
+    .briefing-ribbon:hover { transform: translateX(4px); background: rgba(31, 41, 55, 0.8); }
+    .briefing-ribbon.usa { border-left-color: var(--blue-0); }
+    .briefing-ribbon.china { border-left-color: var(--red-0); }
+    .briefing-ribbon.russia { border-left-color: var(--yellow-0); }
+    .briefing-ribbon.india { border-left-color: var(--green-0); }
+    .briefing-ribbon.europe { border-left-color: var(--purple-0); }
     
-    .panel { background: rgba(17, 24, 39, 0.6); border: 1px solid rgba(55, 65, 81, 0.5); border-radius: 16px; padding: var(--spacing-lg); backdrop-filter: blur(12px); margin-bottom: var(--spacing-lg); }
-    .panel-title { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-md); border-bottom: 2px solid rgba(59, 130, 246, 0.3); color: var(--text-1); font-weight: 700; font-size: 1.125rem; }
-    .panel-title i { color: var(--blue-1); }
-    
-    .briefing-item { background: rgba(31, 41, 55, 0.6); border-left: 4px solid var(--blue-0); border-radius: 12px; padding: var(--spacing-lg); margin-bottom: var(--spacing-lg); transition: all 0.3s; }
-    .briefing-item:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25); }
-    .briefing-item.china { border-left-color: var(--red-0); }
-    .briefing-item.russia { border-left-color: var(--yellow-0); }
-    .briefing-item.usa { border-left-color: var(--blue-0); }
-    .briefing-item.india { border-left-color: var(--green-0); }
-    
-    .briefing-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-md); gap: var(--spacing-md); flex-wrap: wrap; }
-    .briefing-author { display: flex; gap: var(--spacing-md); align-items: flex-start; flex: 1; }
-    .avatar { width: 44px; height: 44px; background: linear-gradient(135deg, var(--blue-0), var(--purple-0)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
-    .author-info h4 { color: var(--text-1); font-size: 1rem; margin-bottom: var(--spacing-xs); }
-    .author-info .role { color: var(--text-3); font-size: 0.8125rem; margin-bottom: var(--spacing-xs); }
-    .author-info .meta { color: var(--text-3); font-size: 0.75rem; display: flex; gap: var(--spacing-sm); flex-wrap: wrap; }
-    
-    .urgency { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.6875rem; font-weight: 700; }
-    .urgency-high { background: rgba(239, 68, 68, 0.2); color: var(--red-1); }
-    .urgency-medium { background: rgba(245, 158, 11, 0.2); color: var(--yellow-1); }
-    
-    .briefing-title { font-weight: 700; margin: var(--spacing-md) 0; color: var(--text-1); font-size: 1rem; }
-    .briefing-quote { background: rgba(17, 24, 39, 0.6); border-left: 3px solid var(--blue-0); padding: var(--spacing-md); margin: var(--spacing-md) 0; font-style: italic; color: var(--text-2); border-radius: 0 8px 8px 0; }
-    .briefing-link { display: inline-flex; align-items: center; gap: var(--spacing-sm); margin-top: var(--spacing-md); padding: 0.5rem 0.875rem; background: rgba(59, 130, 246, 0.15); color: var(--blue-1); text-decoration: none; border-radius: 8px; font-size: 0.8125rem; }
-    
-    .filters { display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-lg); flex-wrap: wrap; }
-    .filter-btn { padding: 0.5rem 0.875rem; background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(55, 65, 81, 0.5); border-radius: 8px; cursor: pointer; font-size: 0.8125rem; font-weight: 600; color: var(--text-3); }
+    .ribbon-content { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .ribbon-quote { flex: 1; font-size: 0.9375rem; color: var(--text-1); font-weight: 500; line-height: 1.5; font-style: italic; }
+    .ribbon-quote::before { content: '"'; color: var(--blue-1); font-size: 1.25rem; font-weight: 700; }
+    .ribbon-quote::after { content: '"'; color: var(--blue-1); font-size: 1.25rem; font-weight: 700; }
+    .ribbon-author { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
+    .author-link { color: var(--blue-1); text-decoration: none; font-weight: 700; font-size: 0.875rem; transition: color 0.3s; }
+    .author-link:hover { color: var(--blue-0); text-decoration: underline; }
+    .author-meta { font-size: 0.75rem; color: var(--text-3); margin-top: 0.25rem; }
+    .urgency-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .urgency-dot.high { background: var(--red-0); box-shadow: 0 0 8px var(--red-0); }
+    .urgency-dot.medium { background: var(--yellow-0); box-shadow: 0 0 8px var(--yellow-0); }
+
+    /* FILTERS */
+    .filters { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-btn { padding: 0.5rem 0.875rem; background: rgba(31, 41, 55, 0.6); border: 1px solid var(--bg-3); border-radius: 8px; cursor: pointer; font-size: 0.8125rem; font-weight: 600; color: var(--text-3); }
     .filter-btn.active { background: var(--blue-0); color: white; }
-    
-    .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-lg); }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--spacing-lg); }
-    
-    .metric-card { background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(55, 65, 81, 0.5); border-radius: 12px; padding: var(--spacing-lg); transition: all 0.3s; }
-    .metric-card:hover { transform: translateY(-2px); border-color: var(--blue-0); }
-    .metric-label { font-size: 0.75rem; color: var(--text-3); text-transform: uppercase; font-weight: 600; margin-bottom: var(--spacing-sm); }
-    .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--text-1); margin-bottom: var(--spacing-xs); }
-    .metric-change { font-size: 0.8125rem; font-weight: 600; }
-    .metric-change.positive { color: var(--green-1); }
-    .metric-change.negative { color: var(--red-1); }
-    
-    .loading-state { text-align: center; padding: 3rem var(--spacing-md); color: var(--text-3); }
-    .loading-spinner { width: 48px; height: 48px; border: 3px solid rgba(59, 130, 246, 0.2); border-top-color: var(--blue-0); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto var(--spacing-md); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    
+
+    /* AI NARRATOR */
     .ai-btn { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: linear-gradient(135deg, var(--blue-0), var(--purple-0)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4); z-index: 1000; border: none; }
-    .ai-panel { position: fixed; bottom: 6rem; right: 2rem; width: 320px; background: var(--bg-1); border: 1px solid var(--bg-3); border-radius: 16px; padding: var(--spacing-lg); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5); z-index: 1000; display: none; }
+    .ai-panel { position: fixed; bottom: 6rem; right: 2rem; width: 320px; background: var(--bg-1); border: 1px solid var(--bg-3); border-radius: 16px; padding: 1.5rem; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5); z-index: 1000; display: none; }
     .ai-panel.show { display: block; }
-    
-    @media (max-width: 1024px) { .grid-2 { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .container { padding: 0 0.75rem; } .ai-panel { width: calc(100% - 2rem); right: 1rem; } }
+    .ai-controls { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .ai-control-btn { flex: 1; padding: 0.5rem; background: var(--bg-2); border: 1px solid var(--bg-3); border-radius: 8px; color: var(--text-2); cursor: pointer; }
+
+    @media (max-width: 768px) {
+      .header-top { flex-direction: column; text-align: center; }
+      .ribbon-content { flex-direction: column; align-items: flex-start; }
+      .ribbon-author { align-items: flex-start; margin-top: 0.5rem; }
+      .ai-panel { width: calc(100% - 2rem); right: 1rem; }
+    }
   </style>
 </head>
 <body>
+
   <header class="header">
     <div class="container">
       <div class="header-top">
         <div class="brand"><h1><span class="brand-geoecon">GeoEcon</span> <span class="brand-intelligence">Intelligence</span></h1></div>
-        <div style="display:flex; gap:1rem; align-items:center;">
-          <span class="badge badge-verified">✓ Double-Checked</span>
+        <div class="header-controls">
+          <select class="lang-selector" id="langSelector">
+            <option value="es">🇪🇸 ES</option>
+            <option value="en">🇺 EN</option>
+            <option value="fr">🇫🇷 FR</option>
+            <option value="de">🇩 DE</option>
+            <option value="zh">🇨🇳 中文</option>
+            <option value="ru">🇷🇺 RU</option>
+          </select>
+          <span class="badge badge-verified" data-i18n="verified">✓ Double-Checked</span>
           <div class="live-clock"><div class="live-dot"></div><span>LIVE</span><span id="clock">--:--:--</span></div>
         </div>
       </div>
       <nav class="nav-tabs">
-        <button class="nav-tab active" data-tab="briefing"><i class="fas fa-newspaper"></i> Briefing</button>
-        <button class="nav-tab" data-tab="financial"><i class="fas fa-chart-line"></i> Financial Flux</button>
-        <button class="nav-tab" data-tab="illegal"><i class="fas fa-exclamation-triangle"></i> Flujos Ilícitos</button>
-        <button class="nav-tab" data-tab="rgopm"><i class="fas fa-globe-americas"></i> RGOPM</button>
-        <button class="nav-tab" data-tab="paises"><i class="fas fa-flag"></i> Países</button>
-        <button class="nav-tab" data-tab="tech"><i class="fas fa-microchip"></i> Tech</button>
+        <button class="nav-tab active" data-tab="briefing" data-i18n="nav.briefing">📰 Briefing</button>
+        <button class="nav-tab" data-tab="financial" data-i18n="nav.financial">📈 Financial Flux</button>
+        <button class="nav-tab" data-tab="illegal" data-i18n="nav.illegal">️ Flujos Ilícitos</button>
+        <button class="nav-tab" data-tab="rgopm" data-i18n="nav.rgopm">🌐 RGOPM</button>
+        <button class="nav-tab" data-tab="paises" data-i18n="nav.countries">🚩 Países</button>
+        <button class="nav-tab" data-tab="tech" data-i18n="nav.tech"> Tech</button>
       </nav>
     </div>
   </header>
@@ -116,98 +119,38 @@
   <main class="main-content">
     <div class="container">
       <div class="tab-content active" id="tab-briefing">
-        <div class="grid-2">
-          <div>
-            <div class="panel">
-              <div class="panel-title"><i class="fas fa-newspaper"></i> Briefing Estratégico: Pensadores & Think Tanks</div>
-              <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--green-0); padding: var(--spacing-md); margin-bottom: var(--spacing-lg); border-radius: 0 8px 8px 0;">
-                <div style="color: var(--green-1); font-weight: 600; margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> Fuentes Verificadas (Triple-Source Rule)</div>
-                <div style="color: var(--text-3); font-size: 0.8125rem;">Análisis double-checked contra publicaciones académicas y fuentes institucionales (2023-2026).</div>
-              </div>
-              <div class="filters">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="usa">USA</button>
-                <button class="filter-btn" data-filter="china">China</button>
-                <button class="filter-btn" data-filter="russia">Rusia</button>
-                <button class="filter-btn" data-filter="india">India</button>
-              </div>
-              <div id="briefingContainer"><div class="loading-state"><div class="loading-spinner"></div><div>Cargando análisis...</div></div></div>
-            </div>
+        <div class="panel">
+          <div class="panel-title" data-i18n="briefing.title">📰 Briefing Estratégico: Pensadores, Think Tanks & CEOs</div>
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all" data-i18n="filter.all">Todos</button>
+            <button class="filter-btn" data-filter="usa">🇺🇸 USA</button>
+            <button class="filter-btn" data-filter="china">🇨🇳 China</button>
+            <button class="filter-btn" data-filter="russia">🇷🇺 Rusia</button>
+            <button class="filter-btn" data-filter="india">🇳 India</button>
+            <button class="filter-btn" data-filter="europe">🇺 Europa</button>
+            <button class="filter-btn" data-filter="thinktank" data-i18n="filter.thinktanks">Think Tanks</button>
+            <button class="filter-btn" data-filter="university" data-i18n="filter.universities">Universidades</button>
+            <button class="filter-btn" data-filter="ceo" data-i18n="filter.ceos">CEOs</button>
           </div>
-          <div>
-            <div class="panel">
-              <div class="panel-title"><i class="fas fa-key"></i> Keywords en Tiempo Real</div>
-              <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
-                <span style="padding:0.5rem 0.875rem; background:rgba(31,41,55,0.6); border:1px solid rgba(55,65,81,0.5); border-radius:8px; font-size:0.8125rem; color:var(--text-2);">IA Generativa <span style="color:var(--text-3); font-size:0.75rem;">850</span></span>
-                <span style="padding:0.5rem 0.875rem; background:rgba(31,41,55,0.6); border:1px solid rgba(55,65,81,0.5); border-radius:8px; font-size:0.8125rem; color:var(--text-2);">Semiconductores <span style="color:var(--text-3); font-size:0.75rem;">619</span></span>
-                <span style="padding:0.5rem 0.875rem; background:rgba(31,41,55,0.6); border:1px solid rgba(55,65,81,0.5); border-radius:8px; font-size:0.8125rem; color:var(--text-2);">Desdolarización <span style="color:var(--text-3); font-size:0.75rem;">433</span></span>
-              </div>
-            </div>
-          </div>
+          <div id="briefingContainer"></div>
         </div>
       </div>
 
-      <div class="tab-content" id="tab-financial">
-        <div class="panel">
-          <div class="panel-title"><i class="fas fa-chart-line"></i> Financial Flux: Flujos de Capital</div>
-          <div class="grid-3">
-            <div class="metric-card"><div class="metric-label">China IED Saliente</div><div class="metric-value">$186.4B</div><div class="metric-change positive">▲ BRI & Silk Road Fund</div></div>
-            <div class="metric-card"><div class="metric-label">USA IED + Ayuda</div><div class="metric-value">$412.8B</div><div class="metric-change positive">▲ CHIPS Act</div></div>
-            <div class="metric-card"><div class="metric-label">UE Global Gateway</div><div class="metric-value">€300B</div><div class="metric-change positive">▲ 2021-2027</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-content" id="tab-illegal">
-        <div class="panel">
-          <div class="panel-title"><i class="fas fa-exclamation-triangle"></i> Flujos Ilícitos (ONU/OCDE)</div>
-          <div class="grid-3">
-            <div class="metric-card"><div class="metric-label">Shadow Fleet</div><div class="metric-value">~1.2M bbl/día</div><div style="color:var(--text-3); font-size:0.75rem; margin-top:0.5rem;">Fuente: SIPRI, CREA</div></div>
-            <div class="metric-card"><div class="metric-label">Narcotráfico Global</div><div class="metric-value">$800B+</div><div style="color:var(--text-3); font-size:0.75rem; margin-top:0.5rem;">Fuente: UNODC WDR 2024</div></div>
-            <div class="metric-card"><div class="metric-label">Oro/Minerales Ilícitos</div><div class="metric-value">$2.8-4.5B</div><div style="color:var(--text-3); font-size:0.75rem; margin-top:0.5rem;">Fuente: UNODC, OECD</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-content" id="tab-rgopm">
-        <div class="panel">
-          <div class="panel-title"><i class="fas fa-globe-americas"></i> Régimen Geoeconómico (RGOPM)</div>
-          <div class="grid-2">
-            <div class="metric-card"><h3 style="color:var(--text-1); margin-bottom:1rem;">Militarización Extractiva</h3><ul style="color:var(--text-2); font-size:0.875rem; line-height:1.8; padding-left:1.25rem;"><li>Bases Militares: 750+ (SIPRI 2024)</li><li>IED Infraestructura Crítica: 68% puertos</li><li>Securitización: 45,000+ efectivos</li></ul></div>
-            <div class="metric-card"><h3 style="color:var(--text-1); margin-bottom:1rem;">Fragilidad Periferizada</h3><ul style="color:var(--text-2); font-size:0.875rem; line-height:1.8; padding-left:1.25rem;"><li>Geopsiquiatría: +34% ansiedad (OMS)</li><li>Desigualdad: Gini 0.48 (WID)</li><li>Empobrecimiento: -12% PIB (WB)</li></ul></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-content" id="tab-paises">
-        <div class="panel">
-          <div class="panel-title"><i class="fas fa-flag"></i> Deep Dives: Venezuela & Angola</div>
-          <div class="grid-2">
-            <div class="metric-card" style="border-left:4px solid var(--yellow-0);"><h3 style="color:var(--text-1); margin-bottom:1rem;">🇻🇪 Venezuela</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;"><div><div class="metric-label">Deuda Total</div><div style="color:var(--red-1); font-weight:700;">$150-160B</div></div><div><div class="metric-label">Dependencia Petrolera</div><div style="color:var(--text-1); font-weight:700;">96%</div></div></div><ul style="color:var(--text-2); font-size:0.875rem; line-height:1.8; padding-left:1.25rem;"><li>Reuniones: Xi ($20B), Putin (S-400), Raisi (drones)</li><li>Proyectos: Arco Minero ($8.5B), Petrocaribe 2.0</li><li>Triada: Deuda 65% China, Financiarización, Militarización</li></ul></div>
-            <div class="metric-card" style="border-left:4px solid var(--green-0);"><h3 style="color:var(--text-1); margin-bottom:1rem;">🇦🇴 Angola</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;"><div><div class="metric-label">Deuda Total</div><div style="color:var(--yellow-1); font-weight:700;">$60-65B</div></div><div><div class="metric-label">Crecimiento 2025</div><div style="color:var(--green-1); font-weight:700;">4.2%</div></div></div><ul style="color:var(--text-2); font-size:0.875rem; line-height:1.8; padding-left:1.25rem;"><li>Reuniones: Blinken (Lobito $8B), Li Qiang ($15B)</li><li>Proyectos: Lobito Corridor ($8.4B), Refinería Cabinda</li><li>Triada: Deuda 58% China, Financiarización, Extractivismo</li></ul></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-content" id="tab-tech">
-        <div class="panel">
-          <div class="panel-title"><i class="fas fa-microchip"></i> Tech & Brecha Tecnológica</div>
-          <div class="grid-2">
-            <div class="metric-card"><h3 style="color:var(--text-1); margin-bottom:1rem;">IA Generativa & Weaponización</h3><p style="color:var(--text-3); font-size:0.875rem; margin:0.5rem 0;">Inversión global: $189B. Uso dual en ciberdefensa.</p><div class="metric-change positive">Crecimiento: +45% interanual</div></div>
-            <div class="metric-card"><h3 style="color:var(--text-1); margin-bottom:1rem;">Semiconductores</h3><p style="color:var(--text-3); font-size:0.875rem; margin:0.5rem 0;">Patentes China vs USA: 3.2:1</p><div class="metric-change positive">Inversión: $156B</div></div>
-          </div>
-        </div>
-      </div>
+      <div class="tab-content" id="tab-financial"><div class="panel"><div class="panel-title">📈 Financial Flux</div><p style="color: var(--text-3); text-align: center; padding: 2rem;">Contenido en desarrollo</p></div></div>
+      <div class="tab-content" id="tab-illegal"><div class="panel"><div class="panel-title">️ Flujos Ilícitos</div><p style="color: var(--text-3); text-align: center; padding: 2rem;">Contenido en desarrollo</p></div></div>
+      <div class="tab-content" id="tab-rgopm"><div class="panel"><div class="panel-title">🌐 RGOPM</div><p style="color: var(--text-3); text-align: center; padding: 2rem;">Contenido en desarrollo</p></div></div>
+      <div class="tab-content" id="tab-paises"><div class="panel"><div class="panel-title">🚩 Países</div><p style="color: var(--text-3); text-align: center; padding: 2rem;">Contenido en desarrollo</p></div></div>
+      <div class="tab-content" id="tab-tech"><div class="panel"><div class="panel-title">💾 Tech</div><p style="color: var(--text-3); text-align: center; padding: 2rem;">Contenido en desarrollo</p></div></div>
     </div>
   </main>
 
   <button class="ai-btn" id="aiBtn"><i class="fas fa-robot"></i></button>
   <div class="ai-panel" id="aiPanel">
-    <div style="font-weight:700; color:var(--text-1); margin-bottom:0.5rem;">GeoEcon AI Narrator</div>
-    <div style="color:var(--text-2); font-size:0.875rem; margin-bottom:1rem;">Haz clic en "Narrar" para escuchar el resumen del día.</div>
-    <div style="display:flex; gap:0.5rem;">
-      <button style="flex:1; padding:0.5rem; background:var(--bg-2); border:1px solid var(--bg-3); border-radius:8px; color:var(--text-2); cursor:pointer;" id="aiPlay"><i class="fas fa-play"></i> Narrar</button>
-      <button style="flex:1; padding:0.5rem; background:var(--bg-2); border:1px solid var(--bg-3); border-radius:8px; color:var(--text-2); cursor:pointer;" id="aiStop"><i class="fas fa-stop"></i> Stop</button>
+    <div style="font-weight: 700; color: var(--text-1); margin-bottom: 0.5rem;" data-i18n="ai.title">🤖 GeoEcon AI Narrator</div>
+    <div style="color: var(--text-2); font-size: 0.875rem;" data-i18n="ai.description">Haz clic en "Narrar" para escuchar el resumen del día.</div>
+    <div class="ai-controls">
+      <button class="ai-control-btn" id="aiPlay" data-i18n="ai.play">▶️ Narrar</button>
+      <button class="ai-control-btn" id="aiStop" data-i18n="ai.stop">⏹️ Stop</button>
     </div>
   </div>
 
@@ -217,67 +160,97 @@
     let supabase = null;
     let allBriefings = [];
     let currentFilter = 'all';
+    let currentLang = 'es';
+
+    const translations = {
+      es: { 'verified': '✓ Double-Checked', 'nav.briefing': '📰 Briefing', 'nav.financial': '📈 Financial Flux', 'nav.illegal': '⚠️ Flujos Ilícitos', 'nav.rgopm': '🌐 RGOPM', 'nav.countries': '🚩 Países', 'nav.tech': '💾 Tech', 'briefing.title': '📰 Briefing Estratégico: Pensadores, Think Tanks & CEOs', 'filter.all': 'Todos', 'filter.thinktanks': 'Think Tanks', 'filter.universities': 'Universidades', 'filter.ceos': 'CEOs', 'ai.title': '🤖 GeoEcon AI Narrator', 'ai.description': 'Haz clic en "Narrar" para escuchar el resumen del día.', 'ai.play': '▶️ Narrar', 'ai.stop': '⏹️ Stop', 'ai.greeting': 'Buenos días. Panorama GeoEconómico del día.' },
+      en: { 'verified': '✓ Double-Checked', 'nav.briefing': '📰 Briefing', 'nav.financial': '📈 Financial Flux', 'nav.illegal': '⚠️ Illegal Flows', 'nav.rgopm': '🌐 RGOPM', 'nav.countries': '🚩 Countries', 'nav.tech': '💾 Tech', 'briefing.title': '📰 Strategic Briefing: Thinkers, Think Tanks & CEOs', 'filter.all': 'All', 'filter.thinktanks': 'Think Tanks', 'filter.universities': 'Universities', 'filter.ceos': 'CEOs', 'ai.title': '🤖 GeoEcon AI Narrator', 'ai.description': 'Click "Narrate" to hear today\'s summary.', 'ai.play': '▶️ Narrate', 'ai.stop': '⏹️ Stop', 'ai.greeting': 'Good morning. GeoEconomic Panorama of the day.' },
+      fr: { 'verified': '✓ Double-Vérifié', 'nav.briefing': '📰 Briefing', 'nav.financial': '📈 Flux Financier', 'nav.illegal': '⚠️ Flux Illicites', 'nav.rgopm': '🌐 RGOPM', 'nav.countries': '🚩 Pays', 'nav.tech': ' Tech', 'briefing.title': '📰 Briefing Stratégique: Penseurs, Think Tanks & PDG', 'filter.all': 'Tous', 'filter.thinktanks': 'Think Tanks', 'filter.universities': 'Universités', 'filter.ceos': 'PDG', 'ai.title': ' GeoEcon AI Narrateur', 'ai.description': 'Cliquez sur "Narrer" pour entendre le résumé du jour.', 'ai.play': '▶️ Narrer', 'ai.stop': '️ Stop', 'ai.greeting': 'Bonjour. Panorama Géoéconomique du jour.' },
+      de: { 'verified': '✓ Doppelgeprüft', 'nav.briefing': '📰 Briefing', 'nav.financial': '📈 Finanzfluss', 'nav.illegal': '⚠️ Illegale Ströme', 'nav.rgopm': '🌐 RGOPM', 'nav.countries': '🚩 Länder', 'nav.tech': '💾 Tech', 'briefing.title': '📰 Strategisches Briefing: Denker, Think Tanks & CEOs', 'filter.all': 'Alle', 'filter.thinktanks': 'Think Tanks', 'filter.universities': 'Universitäten', 'filter.ceos': 'CEOs', 'ai.title': '🤖 GeoEcon AI Narrator', 'ai.description': 'Klicken Sie auf "Narrieren" für die Tageszusammenfassung.', 'ai.play': '▶️ Narrieren', 'ai.stop': '⏹️ Stop', 'ai.greeting': 'Guten Morgen. Geoökonomisches Panorama des Tages.' },
+      zh: { 'verified': '✓ 双重验证', 'nav.briefing': ' 简报', 'nav.financial': ' 金融流动', 'nav.illegal': '️ 非法流动', 'nav.rgopm': '🌐 RGOPM', 'nav.countries': '🚩 国家', 'nav.tech': '💾 科技', 'briefing.title': '📰 战略简报：思想家、智库与首席执行官', 'filter.all': '全部', 'filter.thinktanks': '智库', 'filter.universities': '大学', 'filter.ceos': '首席执行官', 'ai.title': '🤖 GeoEcon AI 播报员', 'ai.description': '点击"播报"收听今日摘要。', 'ai.play': '▶️ 播报', 'ai.stop': '⏹️ 停止', 'ai.greeting': '早上好。今日地缘经济全景。' },
+      ru: { 'verified': '✓ Двойная проверка', 'nav.briefing': '📰 Брифинг', 'nav.financial': '📈 Финансовые потоки', 'nav.illegal': '⚠️ Нелегальные потоки', 'nav.rgopm': ' РГОПМ', 'nav.countries': '🚩 Страны', 'nav.tech': '💾 Технологии', 'briefing.title': '📰 Стратегический брифинг: Мыслители, аналитические центры и генеральные директора', 'filter.all': 'Все', 'filter.thinktanks': 'Аналитические центры', 'filter.universities': 'Университеты', 'filter.ceos': 'Генеральные директора', 'ai.title': '🤖 GeoEcon AI Рассказчик', 'ai.description': 'Нажмите "Рассказать" для прослушивания сводки дня.', 'ai.play': '▶️ Рассказать', 'ai.stop': '⏹️ Стоп', 'ai.greeting': 'Доброе утро. Геоэкономическая панорама дня.' }
+    };
+
+    const briefingData = [
+      { id: 1, author: 'Glenn Diesen', country: 'russia', role: 'Prof. Geopolítica, Univ. del Sur de Noruega', type: 'academic', urgency: 'high', quote: 'La infraestructura financiera alternativa al SWIFT ha procesado un 40% más de volumen interanual, consolidando bloques comerciales no occidentales.', link: 'https://diesen.me', date: '2026-06-07' },
+      { id: 2, author: 'Sergey Karaganov', country: 'russia', role: 'Decano, Facultad de Economía Mundial, HSE', type: 'thinktank', urgency: 'high', quote: 'La integración euroasiática no es una opción, es una necesidad de supervivencia frente a la hostilidad colectiva de Occidente.', link: 'https://valdaiclub.com', date: '2026-06-07' },
+      { id: 3, author: 'John Mearsheimer', country: 'usa', role: 'Prof. Relaciones Internacionales, Univ. de Chicago', type: 'academic', urgency: 'high', quote: 'EE.UU. no puede permitir que China se convierta en una hegemonía regional en Asia. La lógica del realismo ofensivo dicta una contención estratégica implacable.', link: 'https://www.foreignaffairs.com/authors/john-j-mearsheimer', date: '2026-06-07' },
+      { id: 4, author: 'Michael Hudson', country: 'usa', role: 'Prof. Economía, Univ. de Missouri-Kansas City', type: 'academic', urgency: 'medium', quote: 'El sistema financiero global se está fragmentando. La weaponización de las sanciones acelera la búsqueda de alternativas al dólar.', link: 'https://michael-hudson.com', date: '2026-06-07' },
+      { id: 5, author: 'Wen Tiejun', country: 'china', role: 'Prof. Economía Rural, Univ. Renmin de China', type: 'academic', urgency: 'medium', quote: 'La internalización del ciclo económico no es autarquía, sino una reconfiguración estratégica para garantizar la seguridad alimentaria.', link: 'https://www.cass.cn', date: '2026-06-07' },
+      { id: 6, author: 'Radhika Desai', country: 'india', role: 'Directora, Geopolitical Economy Report', type: 'academic', urgency: 'medium', quote: 'El orden unipolar ha terminado. Las instituciones de Bretton Woods carecen de legitimidad estructural frente al ascenso del Sur Global.', link: 'https://geopoliticaleconomy.com', date: '2026-06-07' },
+      { id: 7, author: 'Emmanuel Todd', country: 'europe', role: 'Historiador y Antropólogo, INED', type: 'academic', urgency: 'medium', quote: 'La desindustrialización de Europa y el declive demográfico están reconfigurando el equilibrio de poder continental.', link: 'https://www.ined.fr', date: '2026-06-07' },
+      { id: 8, author: 'Alex Karp', country: 'usa', role: 'CEO, Palantir Technologies', type: 'ceo', urgency: 'high', quote: 'Occidente debe elegir: liderar la IA con valores democráticos o ceder el futuro a regímenes autoritarios.', link: 'https://blog.palantir.com', date: '2026-06-07' },
+      { id: 9, author: 'Jensen Huang', country: 'usa', role: 'CEO, NVIDIA', type: 'ceo', urgency: 'high', quote: 'Cada nación debe construir su propia infraestructura de IA soberana. La dependencia de un solo proveedor es un riesgo geopolítico.', link: 'https://www.nvidia.com', date: '2026-06-07' },
+      { id: 10, author: 'Pony Ma', country: 'china', role: 'CEO, Tencent', type: 'ceo', urgency: 'medium', quote: 'La próxima frontera de la geoeconomía no son los bienes físicos, sino los flujos de datos y la interoperabilidad digital.', link: 'https://www.tencent.com', date: '2026-06-07' },
+      { id: 11, author: 'CSIS', country: 'usa', role: 'Center for Strategic and International Studies', type: 'thinktank', urgency: 'high', quote: 'La expansión de cables submarinos y centros de datos controlados por actores chinos representa un riesgo de inteligencia a largo plazo.', link: 'https://www.csis.org', date: '2026-06-07' },
+      { id: 12, author: 'Brookings Institution', country: 'usa', role: 'Brookings Institution', type: 'thinktank', urgency: 'medium', quote: 'La transición energética requiere una reconfiguración de las cadenas de suministro de minerales críticos.', link: 'https://www.brookings.edu', date: '2026-06-07' },
+      { id: 13, author: 'Chatham House', country: 'europe', role: 'Royal Institute of International Affairs', type: 'thinktank', urgency: 'medium', quote: 'El control de las cadenas de suministro de litio, cobalto y tierras raras definirá el equilibrio de poder del siglo XXI.', link: 'https://www.chathamhouse.org', date: '2026-06-07' },
+      { id: 14, author: 'Carnegie Endowment', country: 'usa', role: 'Carnegie Endowment for International Peace', type: 'thinktank', urgency: 'medium', quote: 'La multipolaridad emergente requiere nuevas arquitecturas de gobernanza global.', link: 'https://carnegieendowment.org', date: '2026-06-07' },
+      { id: 15, author: 'Harvard Kennedy School', country: 'usa', role: 'Harvard University', type: 'university', urgency: 'low', quote: 'La diplomacia económica se ha convertido en el principal instrumento de poder en el siglo XXI.', link: 'https://www.hks.harvard.edu', date: '2026-06-07' },
+      { id: 16, author: 'Stanford CISAC', country: 'usa', role: 'Stanford University', type: 'university', urgency: 'low', quote: 'La seguridad nacional depende cada vez más de la resiliencia tecnológica y la soberanía digital.', link: 'https://cisac.fsi.stanford.edu', date: '2026-06-07' },
+      { id: 17, author: 'LSE', country: 'europe', role: 'London School of Economics', type: 'university', urgency: 'low', quote: 'La globalización financiera ha creado interdependencias asimétricas que favorecen a los centros de poder.', link: 'https://www.lse.ac.uk', date: '2026-06-07' },
+      { id: 18, author: 'Sciences Po', country: 'europe', role: 'Sciences Po Paris', type: 'university', urgency: 'low', quote: 'La gobernanza algorítmica está transformando las relaciones de poder entre Estados y corporaciones.', link: 'https://www.sciencespo.fr', date: '2026-06-07' }
+    ];
 
     document.addEventListener('DOMContentLoaded', () => {
       initSupabase();
       initClock();
-      loadBriefings();
+      renderBriefings(briefingData);
       setupTabs();
       setupFilters();
       setupAINarrator();
+      setupLangSelector();
     });
 
     function initSupabase() {
       try {
         supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         console.log('✅ Supabase cargado');
+        loadBriefingsFromDB();
       } catch (e) { console.error('❌ Error Supabase:', e); }
     }
 
     function initClock() {
-      setInterval(() => {
-        document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-ES');
-      }, 1000);
+      setInterval(() => { document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-ES'); }, 1000);
     }
 
-    async function loadBriefings() {
-      const container = document.getElementById('briefingContainer');
-      if (!supabase) { container.innerHTML = '<div class="loading-state">⚠️ Error de conexión</div>'; return; }
+    async function loadBriefingsFromDB() {
+      if (!supabase) return;
       try {
         const { data, error } = await supabase.from('briefings').select('*').order('created_at', { ascending: false }).limit(10);
-        if (error) throw error;
-        if (data && data.length > 0) {
+        if (!error && data && data.length > 0) {
           allBriefings = data.map(b => ({...b, country: b.country || 'usa', urgency: b.urgency || 'medium'}));
           renderBriefings(allBriefings);
-        } else {
-          container.innerHTML = '<div class="loading-state">📭 No hay análisis disponibles</div>';
         }
-      } catch (e) {
-        console.error('❌ Error:', e);
-        container.innerHTML = '<div class="loading-state">⚠️ Error al cargar datos</div>';
-      }
+      } catch (e) { console.error('Error DB:', e); }
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+    }
+
+    function setupLangSelector() {
+      document.getElementById('langSelector').addEventListener('change', (e) => setLanguage(e.target.value));
     }
 
     function renderBriefings(briefings) {
       const container = document.getElementById('briefingContainer');
-      let filtered = currentFilter === 'all' ? briefings : briefings.filter(b => b.country === currentFilter);
-      if (filtered.length === 0) { container.innerHTML = '<div class="loading-state">📭 No hay análisis para este filtro</div>'; return; }
+      let filtered = currentFilter === 'all' ? briefings : briefings.filter(b => b.country === currentFilter || b.type === currentFilter);
+      if (filtered.length === 0) { container.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 2rem;">No hay análisis disponibles para este filtro.</p>'; return; }
       container.innerHTML = filtered.map(b => `
-        <div class="briefing-item ${b.country || ''}">
-          <div class="briefing-head">
-            <div class="briefing-author">
-              <div class="avatar">${b.avatar || b.author?.substring(0,2).toUpperCase() || '??'}</div>
-              <div class="author-info">
-                <h4>${b.author || 'Sin autor'}</h4>
-                <div class="role">${b.role || ''}</div>
-                <div class="meta"><span>${b.flag || '🌐'}</span><span>• ${b.source || ''}</span><span>• ${b.date || ''}</span></div>
-              </div>
+        <div class="briefing-ribbon ${b.country} ${b.type}">
+          <div class="ribbon-content">
+            <div class="urgency-dot ${b.urgency}"></div>
+            <div class="ribbon-quote">${b.quote}</div>
+            <div class="ribbon-author">
+              <a href="${b.link}" target="_blank" rel="noopener noreferrer" class="author-link">${b.author}</a>
+              <div class="author-meta">${b.role}</div>
             </div>
-            <div class="urgency urgency-${b.urgency === 'high' ? 'high' : 'medium'}">${b.urgency === 'high' ? '🔴 Alta' : '🟡 Media'}</div>
           </div>
-          <div class="briefing-title">${b.title || 'Sin título'}</div>
-          ${b.quote ? `<div class="briefing-quote">"${b.quote}"</div>` : ''}
-          ${b.link ? `<a href="${b.link}" target="_blank" class="briefing-link"><i class="fas fa-external-link-alt"></i> Ver fuente</a>` : ''}
         </div>
       `).join('');
     }
@@ -299,7 +272,7 @@
           document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentFilter = btn.dataset.filter;
-          renderBriefings(allBriefings);
+          renderBriefings(allBriefings.length > 0 ? allBriefings : briefingData);
         });
       });
     }
@@ -309,12 +282,12 @@
       const aiPanel = document.getElementById('aiPanel');
       aiBtn.addEventListener('click', () => aiPanel.classList.toggle('show'));
       document.getElementById('aiPlay').addEventListener('click', () => {
-        if (!allBriefings.length) return;
-        const top3 = allBriefings.filter(b => b.urgency === 'high').slice(0, 3);
-        let text = "Panorama GeoEconómico del día. ";
-        top3.forEach((b, i) => { text += `Punto ${i+1}: ${b.author}. ${b.title}. `; });
+        const data = allBriefings.length > 0 ? allBriefings : briefingData;
+        const topBriefings = data.filter(b => b.urgency === 'high').slice(0, 3);
+        let text = translations[currentLang]['ai.greeting'] + ' ';
+        topBriefings.forEach((b, i) => { text += `Punto ${i+1}: ${b.author}. ${b.quote} `; });
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'es-ES';
+        utterance.lang = currentLang === 'zh' ? 'zh-CN' : currentLang === 'ru' ? 'ru-RU' : currentLang === 'de' ? 'de-DE' : currentLang === 'fr' ? 'fr-FR' : currentLang === 'en' ? 'en-US' : 'es-ES';
         utterance.rate = 0.9;
         window.speechSynthesis.speak(utterance);
       });
